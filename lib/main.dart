@@ -1,27 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'app.dart';
+import 'core/storage/hive_service.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveService.instance.init();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Dealer'),
-        ),
-        body: Center(
-          child: Text('Hello, World!'),
-        ),
-      ),
-    );
-  }
+  runApp(
+    const ProviderScope(
+      child: DealerApp(),
+    ),
+  );
 }
