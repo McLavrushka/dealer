@@ -17,6 +17,7 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onSubmitted,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   final TextEditingController controller;
@@ -31,6 +32,7 @@ class AppTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final ValueChanged<String>? onSubmitted;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class AppTextField extends StatelessWidget {
       enabled: enabled,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
       validator: validator,
       obscureText: obscureText,
       autofillHints: autofillHints,

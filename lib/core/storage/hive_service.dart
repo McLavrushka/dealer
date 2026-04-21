@@ -10,40 +10,111 @@ class HiveService {
   late final Box<dynamic> _appBox;
   late final Box<dynamic> _authBox;
   late final Box<dynamic> _cacheBox;
+  bool _isInitialized = false;
+
+  bool get isInitialized => _isInitialized;
 
   Future<void> init() async {
     await Hive.initFlutter();
     _appBox = await Hive.openBox<dynamic>(HiveBoxes.app);
     _authBox = await Hive.openBox<dynamic>(HiveBoxes.auth);
     _cacheBox = await Hive.openBox<dynamic>(HiveBoxes.cache);
+    _isInitialized = true;
   }
 
-  bool get onboardingShown =>
-      (_appBox.get(HiveKeys.onboardingShown) as bool?) ?? false;
+  bool get onboardingShown {
+    if (!_isInitialized) return false;
+    return (_appBox.get(HiveKeys.onboardingShown) as bool?) ?? false;
+  }
 
-  Future<void> setOnboardingShown() =>
-      _appBox.put(HiveKeys.onboardingShown, true);
+  Future<void> setOnboardingShown() async {
+    if (!_isInitialized) await init();
+    await _appBox.put(HiveKeys.onboardingShown, true);
+  }
 
-  String? get accessToken => _authBox.get(HiveKeys.accessToken) as String?;
-  String? get refreshToken => _authBox.get(HiveKeys.refreshToken) as String?;
+  /// Invite code from a deep link when the user still has to log in / finish onboarding.
+  String? get pendingInviteCode {
+    if (!_isInitialized) return null;
+    final v = _appBox.get(HiveKeys.pendingInviteCode);
+    if (v is! String || v.trim().isEmpty) return null;
+    return v.trim();
+  }
+
+  void setPendingInviteCode(String code) {
+    if (!_isInitialized) return;
+    _appBox.put(HiveKeys.pendingInviteCode, code.trim());
+  }
+
+  Future<void> clearPendingInviteCode() async {
+    if (!_isInitialized) return;
+    await _appBox.delete(HiveKeys.pendingInviteCode);
+  }
+
+  String? get accessToken {
+    if (!_isInitialized) return null;
+    return _authBox.get(HiveKeys.accessToken) as String?;
+  }
+
+  String? get refreshToken {
+    if (!_isInitialized) return null;
+    return _authBox.get(HiveKeys.refreshToken) as String?;
+  }
 
   Future<void> saveTokens({
     required String accessToken,
     required String refreshToken,
   }) async {
+    if (!_isInitialized) await init();
     await _authBox.put(HiveKeys.accessToken, accessToken);
     await _authBox.put(HiveKeys.refreshToken, refreshToken);
   }
 
   Future<void> clearTokens() async {
+    if (!_isInitialized) return;
     await _authBox.delete(HiveKeys.accessToken);
     await _authBox.delete(HiveKeys.refreshToken);
   }
 
   Future<void> clearAll() async {
+    if (!_isInitialized) return;
     await _appBox.clear();
     await _authBox.clear();
     await _cacheBox.clear();
+  }
+
+  Map<String, dynamic> _deepStringKeyedMap(Object? value) {
+    if (value is Map) {
+      return value.map(
+        (k, v) => MapEntry(k.toString(), _deepConvertJsonValue(v)),
+      );
+    }
+    return const <String, dynamic>{};
+  }
+
+  dynamic _deepConvertJsonValue(Object? value) {
+    if (value is Map) {
+      return value.map(
+        (k, v) => MapEntry(k.toString(), _deepConvertJsonValue(v)),
+      );
+    }
+    if (value is List) {
+      return value.map(_deepConvertJsonValue).toList();
+    }
+    return value;
+  }
+
+  List<Map<String, dynamic>> get cachedGroups {
+    if (!_isInitialized) return const [];
+    final raw = _cacheBox.get(HiveKeys.cachedGroups);
+    if (raw is List) {
+      return raw.whereType<Map>().map(_deepStringKeyedMap).toList();
+    }
+    return const [];
+  }
+
+  Future<void> setCachedGroups(List<Map<String, dynamic>> groupsJson) async {
+    if (!_isInitialized) await init();
+    await _cacheBox.put(HiveKeys.cachedGroups, groupsJson);
   }
 }
 

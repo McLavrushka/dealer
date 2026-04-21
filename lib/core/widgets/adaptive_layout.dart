@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 
 class AdaptiveLayout extends StatelessWidget {
@@ -57,7 +58,7 @@ class _SideTitle extends StatelessWidget {
       child: Align(
         alignment: Alignment.topLeft,
         child: Text(
-          'Dealer',
+          AppLocalizations.of(context).appBrandSideTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.8),

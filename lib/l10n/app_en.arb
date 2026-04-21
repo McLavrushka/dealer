@@ -1,0 +1,186 @@
+{
+  "@@locale": "en",
+  "loginTitle": "Login",
+  "registerAction": "Register",
+  "emailLabel": "Email",
+  "emailHint": "name@example.com",
+  "passwordLabel": "Password",
+  "nameLabel": "Name",
+  "continueButton": "Continue",
+  "createAccountButton": "Create account",
+  "registerTitle": "Register",
+  "loginAction": "Login",
+  "profileTitle": "Profile",
+  "defaultCurrencyLabel": "Default currency",
+  "currencyCodeHint": "USD / EUR / RUB",
+  "saveButton": "Save",
+  "logoutButton": "Logout",
+  "debugClearHiveButton": "Clean all app memory",
+  "clearStorageDialogTitle": "Clear local storage?",
+  "clearStorageDialogBody": "This will remove tokens, onboarding flag, and cached data on this device.",
+  "cancelButton": "Cancel",
+  "clearButton": "Clear",
+  "localStorageClearedMessage": "Local storage cleared",
+  "groupsTitle": "Groups",
+  "notificationsTooltip": "Notifications",
+  "noGroupsTitle": "No groups yet",
+  "noGroupsMessage": "Create a group or join by invite code.",
+  "addGroupButton": "Add group",
+  "createGroupMenu": "Create group",
+  "joinByCodeMenu": "Join by code",
+  "createGroupSheetTitle": "Create group",
+  "joinGroupSheetTitle": "Join group",
+  "joinFromLinkIntro": "Enter the invite code or use the one from the link.",
+  "currencyLabel": "Currency",
+  "createButton": "Create",
+  "joinButton": "Join",
+  "inviteCodeLabel": "Invite code",
+  "inviteCodeHint": "e.g. ABC123",
+  "groupFallbackTitle": "Group",
+  "balanceSectionTitle": "Balance",
+  "noBalanceTitle": "No balance yet",
+  "noBalanceMessage": "Create a bill to see balances.",
+  "billsSectionTitle": "Bills",
+  "noBillsTitle": "No bills yet",
+  "noBillsMessage": "Tap “Add bill” to create your first one.",
+  "addBillButton": "Add bill",
+  "deleteBillDialogTitle": "Delete bill?",
+  "deleteBillDialogContent": "\"{billTitle}\" will be removed for everyone in this group. This cannot be undone.",
+  "@deleteBillDialogContent": {
+    "placeholders": {
+      "billTitle": {"type": "String"}
+    }
+  },
+  "deleteButton": "Delete",
+  "inviteButton": "Invite",
+  "inviteCodeRow": "Invite code: {code}",
+  "@inviteCodeRow": {
+    "placeholders": {
+      "code": {"type": "String"}
+    }
+  },
+  "inviteCodeEmpty": "Invite code: —",
+  "copyInviteCodeTooltip": "Copy invite code",
+  "noInviteCodeTooltip": "No invite code yet",
+  "inviteCodeCopiedSnackbar": "Invite code copied",
+  "membersCurrencyLine": "{count} members • {currency}",
+  "@membersCurrencyLine": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "currency": {"type": "String"}
+    }
+  },
+  "deleteBillTooltip": "Delete bill",
+  "billFallbackTitle": "Bill",
+  "scanReceiptTooltip": "Scan receipt",
+  "noLineItemsTitle": "No line items",
+  "noLineItemsMessage": "Add items to split this bill.",
+  "addItemButton": "Add item",
+  "totalLabel": "Total",
+  "splitButton": "Split",
+  "deleteLineItemDialogTitle": "Delete line item?",
+  "deleteLineItemDialogContent": "Remove \"{itemName}\" from this bill? This cannot be undone.",
+  "@deleteLineItemDialogContent": {
+    "placeholders": {
+      "itemName": {"type": "String"}
+    }
+  },
+  "editTooltip": "Edit",
+  "deleteTooltip": "Delete",
+  "addItemSheetTitle": "Add item",
+  "editItemSheetTitle": "Edit item",
+  "priceLabel": "Price",
+  "quantityLabel": "Quantity",
+  "addSheetButton": "Add",
+  "saveSheetButton": "Save",
+  "invalidNumberValidation": "Invalid number",
+  "resultTitle": "Result",
+  "billSummaryTitle": "Bill summary",
+  "whoPaysTooltip": "Who pays?",
+  "loadingText": "Loading…",
+  "changeSplitButton": "Change split",
+  "settleBillButton": "Settle bill",
+  "shareButton": "Share",
+  "billSettledMessage": "Bill settled",
+  "rouletteTitle": "Roulette",
+  "whoPaysTitle": "Who pays?",
+  "winnerLabel": "Winner",
+  "participantsLabel": "Participants",
+  "rouletteMinMembersMessage": "Add at least two members to the group to spin.",
+  "spinButton": "Spin",
+  "spinningButton": "Spinning…",
+  "roulettePaysMessage": "{name} pays!",
+  "@roulettePaysMessage": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "scanReceiptTitle": "Scan receipt",
+  "tabQr": "QR",
+  "tabOcr": "OCR",
+  "tabManual": "Manual",
+  "scanWebManualIntro": "Scanning is only available in the mobile app. Paste a fiscal QR string or raw receipt text below.",
+  "fiscalQrLabel": "Fiscal QR string",
+  "fiscalQrHint": "t=20201017T1923&s=1498.00&fn=...",
+  "parseQrButton": "Parse QR",
+  "receiptTextForOcrLabel": "Receipt text (OCR paste)",
+  "parseTextButton": "Parse text",
+  "takePhotoButton": "Take photo",
+  "chooseFromGalleryButton": "Choose from gallery",
+  "qrPointCameraHint": "Point the camera at the receipt QR code.",
+  "scanOcrDescription": "OCR: Latin script (English, amounts with $ € £). Best for English or Romanized slips; Cyrillic is weak on-device — use the QR tab for Russian fiscal receipts.\n\nRecognition: Latin (English, currencies). Cyrillic is weak — for RF receipts use the QR tab.",
+  "importLinesQuestion": "Import {count} item(s)?",
+  "@importLinesQuestion": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "importButton": "Import",
+  "onboardingHeadline": "Split bills fairly",
+  "onboardingDescription": "Create groups, add items, split the total, and settle up — all in one place.",
+  "getStartedButton": "Get started",
+  "notificationsTitle": "Notifications",
+  "noNotificationsTitle": "No notifications",
+  "noNotificationsMessage": "You will see bill and group updates here.",
+  "newBillSheetTitle": "New bill",
+  "scanningMobileOnlyBanner": "Scanning is only available in the mobile app.",
+  "scanReceiptQrOption": "Scan receipt QR",
+  "photoReceiptOcrOption": "Photo receipt (OCR)",
+  "enterManuallyOption": "Enter manually",
+  "billDetailsTitle": "Bill details",
+  "titleFieldLabel": "Title",
+  "createBillDefaultReceiptTitle": "Receipt",
+  "createBillManualDefaultTitle": "New bill",
+  "errorGenericTitle": "Something went wrong",
+  "retryButton": "Retry",
+  "appBrandSideTitle": "Dealer",
+  "validationRequired": "Required",
+  "validationInvalidEmail": "Invalid email",
+  "validationMinPassword": "Min 6 characters",
+  "genericSomethingWentWrong": "Something went wrong",
+  "shareGroupInviteBody": "Join my group\nCode: {code}\n{link}",
+  "@shareGroupInviteBody": {
+    "placeholders": {
+      "code": {"type": "String"},
+      "link": {"type": "String"}
+    }
+  },
+  "splitScreenTitle": "Split",
+  "summaryLabel": "Summary",
+  "doneButton": "Done",
+  "lineTotalLabel": "Line total: {amount}",
+  "@lineTotalLabel": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "splitSelectAtLeastOnePerson": "Select at least one person for \"{itemName}\"",
+  "@splitSelectAtLeastOnePerson": {
+    "placeholders": {
+      "itemName": {"type": "String"}
+    }
+  },
+  "errorNoTextRecognized": "No text recognized",
+  "errorCouldNotParseOcrLines": "Could not parse positions from OCR text",
+  "errorNoLinesInPaste": "No line items found in text"
+}

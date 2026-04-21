@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../storage/hive_service.dart';
 import 'api_config.dart';
@@ -20,7 +21,14 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final token = _hive.accessToken;
-    if (token != null && _needsAuth(options)) {
+    final needs = _needsAuth(options);
+    if (kDebugMode && needs && token == null) {
+      debugPrint(
+        'AuthInterceptor: missing access token for ${options.uri} '
+        '(expected Bearer after login — check Hive / web storage).',
+      );
+    }
+    if (token != null && needs) {
       options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);
@@ -31,7 +39,9 @@ class AuthInterceptor extends Interceptor {
     final status = err.response?.statusCode;
     final requestOptions = err.requestOptions;
 
-    if (status != 401 || !_needsAuth(requestOptions)) {
+    // Some setups return 403 when JWT is missing/invalid (anonymous user).
+    final canRefresh = status == 401 || status == 403;
+    if (!canRefresh || !_needsAuth(requestOptions)) {
       handler.next(err);
       return;
     }
@@ -54,11 +64,30 @@ class AuthInterceptor extends Interceptor {
   }
 
   bool _needsAuth(RequestOptions options) {
-    final path = options.path;
+    if (!_isRequestToAppBackend(options)) return false;
+    final path = _requestPath(options);
     if (path.endsWith(ApiConfig.authLogin)) return false;
     if (path.endsWith(ApiConfig.authRegister)) return false;
     if (path.endsWith(ApiConfig.authRefresh)) return false;
     return true;
+  }
+
+  /// Only attach JWT to our REST API ([ApiConfig.resolvedBaseUrl]), not third-party hosts
+  /// (e.g. FNS receipt check) — foreign 403s must not trigger token refresh.
+  bool _isRequestToAppBackend(RequestOptions options) {
+    try {
+      final base = Uri.parse(ApiConfig.resolvedBaseUrl);
+      return options.uri.authority == base.authority;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Dio may leave [RequestOptions.path] empty on some platforms; [uri.path] is reliable.
+  String _requestPath(RequestOptions options) {
+    final p = options.path;
+    if (p.isNotEmpty) return p;
+    return options.uri.path;
   }
 
   Future<bool> _refreshTokensIfNeeded() async {
@@ -74,7 +103,7 @@ class AuthInterceptor extends Interceptor {
     try {
       final refreshDio = Dio(
         BaseOptions(
-          baseUrl: ApiConfig.baseUrl,
+          baseUrl: ApiConfig.resolvedBaseUrl,
           headers: const {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

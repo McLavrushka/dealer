@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # Nested freezed/json models must serialize to Map, not raw objects (Hive).
+          explicit_to_json: true

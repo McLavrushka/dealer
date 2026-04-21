@@ -29,11 +29,19 @@ class AppButton extends StatelessWidget {
     final enabled = onPressed != null && !isLoading;
     final action = enabled ? onPressed : null;
 
+    final scheme = Theme.of(context).colorScheme;
+    final spinnerColor = switch (variant) {
+      AppButtonVariant.primary => scheme.onPrimary,
+      AppButtonVariant.secondary => scheme.primary,
+      AppButtonVariant.text => scheme.primary,
+    };
+
     final content = _Content(
       label: label,
       isLoading: isLoading,
       leading: leading,
       trailing: trailing,
+      spinnerColor: spinnerColor,
     );
 
     final button = switch (variant) {
@@ -62,23 +70,24 @@ class _Content extends StatelessWidget {
     required this.isLoading,
     this.leading,
     this.trailing,
+    required this.spinnerColor,
   });
 
   final String label;
   final bool isLoading;
   final Widget? leading;
   final Widget? trailing;
+  final Color spinnerColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final spinner = SizedBox(
       width: 18,
       height: 18,
       child: CircularProgressIndicator(
         strokeWidth: 2,
         valueColor: AlwaysStoppedAnimation<Color>(
-          theme.colorScheme.onPrimary,
+          spinnerColor,
         ),
       ),
     );

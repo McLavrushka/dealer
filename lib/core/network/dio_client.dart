@@ -13,7 +13,7 @@ Dio dio(DioRef ref) {
 
   final dio = Dio(
     BaseOptions(
-      baseUrl: ApiConfig.baseUrl,
+      baseUrl: ApiConfig.resolvedBaseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 20),
       sendTimeout: const Duration(seconds: 20),
