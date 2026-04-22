@@ -18,7 +18,7 @@ import '../domain/receipt_ocr_preprocess.dart';
 import '../domain/receipt_ocr_temp.dart';
 import '../domain/receipt_ocr_text_builder.dart';
 
-/// QR / OCR / manual fiscal string. On [kIsWeb], only manual input is available.
+/// QR / OCR scan. On [kIsWeb], only manual paste is available.
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({
     super.key,
@@ -28,7 +28,7 @@ class ScanScreen extends ConsumerStatefulWidget {
 
   final String billId;
 
-  /// Mobile only: `0` = QR, `1` = OCR, `2` = Manual.
+  /// Mobile only: `0` = QR, `1` = OCR.
   final int initialTabIndex;
 
   @override
@@ -49,8 +49,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   void initState() {
     super.initState();
     if (!kIsWeb) {
-      final idx = widget.initialTabIndex.clamp(0, 2);
-      _tabs = TabController(length: 3, vsync: this, initialIndex: idx);
+      final idx = widget.initialTabIndex.clamp(0, 1);
+      _tabs = TabController(length: 2, vsync: this, initialIndex: idx);
       _scanner = MobileScannerController();
     }
   }
@@ -79,7 +79,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                     tabs: [
                       Tab(text: l10n.tabQr),
                       Tab(text: l10n.tabOcr),
-                      Tab(text: l10n.tabManual),
                     ],
                   ),
           ),
@@ -90,7 +89,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   children: [
                     _buildQrTab(context),
                     _buildOcrTab(context),
-                    _buildManualTab(context),
                   ],
                 ),
         ),
@@ -175,10 +173,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         ),
         Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
-          child: Text(
-            l10n.qrPointCameraHint,
-            style: Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.center,
+          child: Column(
+            children: [
+              Text(
+                l10n.qrPointCameraHint,
+                style: Theme.of(context).textTheme.bodySmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: l10n.chooseFromGalleryButton,
+                variant: AppButtonVariant.secondary,
+                onPressed: _busy ? null : _scanQrFromGallery,
+              ),
+            ],
           ),
         ),
       ],
@@ -209,25 +217,39 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     );
   }
 
-  Widget _buildManualTab(BuildContext context) {
+  Future<void> _scanQrFromGallery() async {
     final l10n = context.l10n;
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      children: [
-        TextField(
-          controller: _manualQr,
-          maxLines: 4,
-          decoration: InputDecoration(
-            labelText: l10n.fiscalQrLabel,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppButton(
-          label: l10n.parseQrButton,
-          onPressed: _busy ? null : () => _parseQrString(_manualQr.text),
-        ),
-      ],
-    );
+    final picker = ImagePicker();
+    final file = await picker.pickImage(source: ImageSource.gallery);
+    if (!mounted) return;
+    if (file == null) return;
+    setState(() => _busy = true);
+    try {
+      // ignore: deprecated_member_use
+      final scanner = GoogleMlKit.vision.barcodeScanner();
+      try {
+        final input = InputImage.fromFilePath(file.path);
+        final barcodes = await scanner.processImage(input);
+        final value = barcodes
+            .map((b) => b.rawValue)
+            .whereType<String>()
+            .map((s) => s.trim())
+            .where((s) => s.isNotEmpty)
+            .cast<String?>()
+            .firstWhere((_) => true, orElse: () => null);
+        if (value == null) {
+          throw StateError(l10n.errorCouldNotParseQrFromImage);
+        }
+        if (!mounted) return;
+        await _parseQrString(value);
+      } finally {
+        await scanner.close();
+      }
+    } catch (e) {
+      if (mounted) Snackbars.showError(context, e);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   Future<void> _parseQrString(String raw) async {

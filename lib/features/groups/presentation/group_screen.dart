@@ -6,7 +6,6 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../core/l10n/context_l10n.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../core/network/api_config.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/snackbars.dart';
@@ -120,7 +119,14 @@ class GroupScreen extends ConsumerWidget {
                             bill,
                           ),
                         ),
-                        onTap: () => context.push(AppRoutes.billPath(bill.id)),
+                        onTap: () async {
+                          await context.push(AppRoutes.billPath(bill.id));
+                          if (!context.mounted) return;
+                          // Bills list payload often contains stale totals (e.g. 0) until refreshed.
+                          await ref
+                              .read(groupViewModelProvider(groupId).notifier)
+                              .refresh();
+                        },
                       );
                     }),
                   const SizedBox(height: 96),
@@ -192,9 +198,8 @@ class GroupScreen extends ConsumerWidget {
       final invite = await repo.invite(id);
       await ref.read(groupViewModelProvider(groupId).notifier).applyInviteFromServer(invite);
       if (!context.mounted) return;
-      final link = ApiConfig.inviteJoinUrlForCode(invite.inviteCode);
       await Share.share(
-        l10n.shareGroupInviteBody(invite.inviteCode, link),
+        l10n.shareGroupInviteBody(invite.inviteCode),
       );
     } catch (e) {
       if (!context.mounted) return;

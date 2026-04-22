@@ -167,11 +167,10 @@
   "validationInvalidEmail": "Invalid email",
   "validationMinPassword": "Min 6 characters",
   "genericSomethingWentWrong": "Something went wrong",
-  "shareGroupInviteBody": "Join my group\nCode: {code}\n{link}",
+  "shareGroupInviteBody": "Join my group\nCode: {code}",
   "@shareGroupInviteBody": {
     "placeholders": {
-      "code": {"type": "String"},
-      "link": {"type": "String"}
+      "code": {"type": "String"}
     }
   },
   "splitScreenTitle": "Split",
@@ -191,5 +190,6 @@
   },
   "errorNoTextRecognized": "No text recognized",
   "errorCouldNotParseOcrLines": "Could not parse positions from OCR text",
+  "errorCouldNotParseQrFromImage": "No QR code found in the selected image",
   "errorNoLinesInPaste": "No line items found in text"
 }

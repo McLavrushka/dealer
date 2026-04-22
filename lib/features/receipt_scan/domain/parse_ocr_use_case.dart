@@ -43,8 +43,28 @@ class ParseOcrUseCase {
     r'|чек\b|смена|позиц|наименован|стоимост|кол-во|ед\.|изм\.|шт\.'
     r'|visa|master|mir|мир\b|карт'
     r'|total\b|subtotal|balance\s*due|amount\s*due|change|tax\b|vat\b|hst\b|gst\b'
-    r'|gratuity|service\s*charge|tip\b|payment|debit|credit|discount'
-    r'|thank\s*you|receipt|invoice|cashier|register)',
+    r'|gratuity|service\s*charge|tip\b|payment|paid|debit|credit|discount|coupon'
+    r'|thank\s*you|receipt|invoice|cashier|register|merchant|terminal|transaction'
+    r'|approved|declined|auth|authorization|ref|reference|trace|batch|rrn|aid\b|tvr\b'
+    r'|phone|tel\b|address|website|www\b|http\b|order\b|table\b|server\b|guest\b)',
+    caseSensitive: false,
+  );
+
+  /// When OCR includes totals / payments, everything below is usually not item lines.
+  static final _stopAfter = RegExp(
+    r'^(total\b|subtotal\b|balance\s*due|amount\s*due|grand\s*total|'
+    r'paid\b|payment\b|cash\b|card\b|change\b|tax\b|vat\b|gst\b|hst\b|'
+    r'tip\b|gratuity|service\s*charge|discount|coupon)',
+    caseSensitive: false,
+  );
+
+  static final _urlLike = RegExp(
+    r'(https?://|www\.)',
+    caseSensitive: false,
+  );
+
+  static final _dateTimeLike = RegExp(
+    r'(\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b\d{4}[/-]\d{1,2}[/-]\d{1,2}\b|\b\d{1,2}:\d{2}\b)',
     caseSensitive: false,
   );
 
@@ -58,7 +78,7 @@ class ParseOcrUseCase {
         .where((l) => l.isNotEmpty)
         .toList();
 
-    final merged = _mergeWrappedLines(rawLines);
+    final merged = _mergeWrappedLines(_filterAndCut(rawLines));
     final out = <ReceiptLine>[];
 
     for (final line in merged) {
@@ -69,16 +89,56 @@ class ParseOcrUseCase {
     return out;
   }
 
+  /// Removes obvious non-item lines, and cuts off footer after totals / payment section.
+  static List<String> _filterAndCut(List<String> lines) {
+    final out = <String>[];
+    var seenItemLike = false;
+    for (final line in lines) {
+      final lower = line.toLowerCase().replaceAll('ё', 'е');
+
+      // Hard skip.
+      if (_urlLike.hasMatch(lower)) continue;
+      if (lower.length < 4) continue;
+
+      if (_looksLikeItemLine(line)) {
+        seenItemLike = true;
+      }
+
+      // Some receipts repeat a lot of meta lines with dates/times/ids.
+      // Keep only if it still looks like an item line.
+      if (_dateTimeLike.hasMatch(lower) && !_looksLikeItemLine(line)) {
+        continue;
+      }
+
+      // Cut after totals/payment lines unless it actually matches an item pattern.
+      if (seenItemLike && _stopAfter.hasMatch(lower) && !_looksLikeItemLine(line)) {
+        break;
+      }
+
+      out.add(line);
+    }
+    return out;
+  }
+
   static String _collapseSpaces(String s) =>
       s.replaceAll(RegExp(r'\s+'), ' ').trim();
 
   static bool _shouldSkipLine(String line) {
     if (line.length < 4) return true;
     final lower = line.toLowerCase().replaceAll('ё', 'е');
-    if (_junkLine.hasMatch(lower)) return true;
+    if (!_looksLikeItemLine(line) && _junkLine.hasMatch(lower)) return true;
+    if (_urlLike.hasMatch(lower)) return true;
     // Single token or almost only digits — not a product line
     if (!RegExp(r'[A-Za-zА-Яа-яЁё]').hasMatch(line)) return true;
     return false;
+  }
+
+  static bool _looksLikeItemLine(String line) {
+    return _nameThenAmount.hasMatch(line) ||
+        _qtyXUnitTotal.hasMatch(line) ||
+        _qtyAtUnit.hasMatch(line) ||
+        _qtyXUnit.hasMatch(line) ||
+        _twoColumnAmount.hasMatch(line);
   }
 
   /// If a product name wraps to the next line, OCR often gives:
@@ -90,11 +150,7 @@ class ParseOcrUseCase {
     var i = 0;
     while (i < lines.length) {
       final line = lines[i];
-      final hasTrailingPrice = _nameThenAmount.hasMatch(line) ||
-          _qtyXUnitTotal.hasMatch(line) ||
-          _qtyAtUnit.hasMatch(line) ||
-          _qtyXUnit.hasMatch(line) ||
-          _twoColumnAmount.hasMatch(line);
+      final hasTrailingPrice = _looksLikeItemLine(line);
 
       final next = i + 1 < lines.length ? lines[i + 1] : null;
       if (!hasTrailingPrice &&

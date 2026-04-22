@@ -136,7 +136,7 @@
   "validationInvalidEmail": "Неверный email",
   "validationMinPassword": "Минимум 6 символов",
   "genericSomethingWentWrong": "Что-то пошло не так",
-  "shareGroupInviteBody": "Присоединяйтесь к группе\nКод: {code}\n{link}",
+  "shareGroupInviteBody": "Присоединяйтесь к группе\nКод: {code}",
   "splitScreenTitle": "Разделение",
   "summaryLabel": "Сводка",
   "doneButton": "Готово",
@@ -144,5 +144,6 @@
   "splitSelectAtLeastOnePerson": "Выберите хотя бы одного человека для «{itemName}»",
   "errorNoTextRecognized": "Текст не распознан",
   "errorCouldNotParseOcrLines": "Не удалось разобрать позиции из текста OCR",
+  "errorCouldNotParseQrFromImage": "Не удалось найти QR-код на выбранном изображении",
   "errorNoLinesInPaste": "В тексте не найдено позиций"
 }

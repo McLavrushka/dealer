@@ -917,8 +917,8 @@ abstract class AppLocalizations {
   /// No description provided for @shareGroupInviteBody.
   ///
   /// In en, this message translates to:
-  /// **'Join my group\nCode: {code}\n{link}'**
-  String shareGroupInviteBody(String code, String link);
+  /// **'Join my group\nCode: {code}'**
+  String shareGroupInviteBody(String code);
 
   /// No description provided for @splitScreenTitle.
   ///
@@ -961,6 +961,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not parse positions from OCR text'**
   String get errorCouldNotParseOcrLines;
+
+  /// No description provided for @errorCouldNotParseQrFromImage.
+  ///
+  /// In en, this message translates to:
+  /// **'No QR code found in the selected image'**
+  String get errorCouldNotParseQrFromImage;
 
   /// No description provided for @errorNoLinesInPaste.
   ///

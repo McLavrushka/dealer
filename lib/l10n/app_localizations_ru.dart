@@ -438,8 +438,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get genericSomethingWentWrong => 'Что-то пошло не так';
 
   @override
-  String shareGroupInviteBody(String code, String link) {
-    return 'Присоединяйтесь к группе\nКод: $code\n$link';
+  String shareGroupInviteBody(String code) {
+    return 'Присоединяйтесь к группе\nКод: $code';
   }
 
   @override
@@ -467,6 +467,10 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get errorCouldNotParseOcrLines =>
       'Не удалось разобрать позиции из текста OCR';
+
+  @override
+  String get errorCouldNotParseQrFromImage =>
+      'Не удалось найти QR-код на выбранном изображении';
 
   @override
   String get errorNoLinesInPaste => 'В тексте не найдено позиций';

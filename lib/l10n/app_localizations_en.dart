@@ -437,8 +437,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get genericSomethingWentWrong => 'Something went wrong';
 
   @override
-  String shareGroupInviteBody(String code, String link) {
-    return 'Join my group\nCode: $code\n$link';
+  String shareGroupInviteBody(String code) {
+    return 'Join my group\nCode: $code';
   }
 
   @override
@@ -466,6 +466,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorCouldNotParseOcrLines =>
       'Could not parse positions from OCR text';
+
+  @override
+  String get errorCouldNotParseQrFromImage =>
+      'No QR code found in the selected image';
 
   @override
   String get errorNoLinesInPaste => 'No line items found in text';
