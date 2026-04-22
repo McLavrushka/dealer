@@ -27,11 +27,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _currency = TextEditingController();
+  final _transferComment = TextEditingController();
 
   @override
   void dispose() {
     _name.dispose();
     _currency.dispose();
+    _transferComment.dispose();
     super.dispose();
   }
 
@@ -73,6 +75,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               if (_name.text != user.name) _name.text = user.name;
               final nextCurrency = user.currencyDefault ?? '';
               if (_currency.text != nextCurrency) _currency.text = nextCurrency;
+              final nextTransfer = user.transferComment ?? '';
+              if (_transferComment.text != nextTransfer) {
+                _transferComment.text = nextTransfer;
+              }
             });
 
             return SingleChildScrollView(
@@ -92,6 +98,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       controller: _currency,
                       label: l10n.defaultCurrencyLabel,
                       hint: l10n.currencyCodeHint,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    AppTextField(
+                      controller: _transferComment,
+                      label: l10n.transferCommentLabel,
+                      hint: l10n.transferCommentHint,
+                      minLines: 2,
+                      maxLines: 4,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
@@ -264,6 +280,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           currencyDefault: _currency.text.trim().isEmpty
               ? null
               : _currency.text.trim().toUpperCase(),
+          transferComment: _transferComment.text.trim().isEmpty
+              ? null
+              : _transferComment.text.trim(),
         );
   }
 }

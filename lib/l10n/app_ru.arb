@@ -21,6 +21,8 @@
   "languageOptionRussian": "Русский",
   "languageOptionEnglish": "English",
   "defaultCurrencyLabel": "Валюта по умолчанию",
+  "transferCommentLabel": "Данные для перевода",
+  "transferCommentHint": "Карта/телефон и банк (например: Тинькофф +7… / Сбер **** 1234)",
   "currencyCodeHint": "USD / EUR / RUB",
   "saveButton": "Сохранить",
   "logoutButton": "Выйти",
@@ -140,10 +142,42 @@
   "splitScreenTitle": "Разделение",
   "summaryLabel": "Сводка",
   "doneButton": "Готово",
+  "sharePaymentDetailsHeader": "Мои реквизиты для перевода",
   "lineTotalLabel": "Сумма строки: {amount}",
   "splitSelectAtLeastOnePerson": "Выберите хотя бы одного человека для «{itemName}»",
   "errorNoTextRecognized": "Текст не распознан",
   "errorCouldNotParseOcrLines": "Не удалось разобрать позиции из текста OCR",
   "errorCouldNotParseQrFromImage": "Не удалось найти QR-код на выбранном изображении",
-  "errorNoLinesInPaste": "В тексте не найдено позиций"
+  "errorNoLinesInPaste": "В тексте не найдено позиций",
+  "tippingMenuButtonTooltip": "Добавить чаевые",
+  "tipSheetTitle": "Чаевые",
+  "tipModePercent": "Процент от суммы",
+  "tipModeFixed": "Фиксированная сумма",
+  "tipPercentFieldLabel": "Процент (%)",
+  "tipPercentFieldHint": "например 10",
+  "tipFixedFieldLabel": "Сумма ({currency})",
+  "@tipFixedFieldLabel": {
+    "placeholders": {
+      "currency": {"type": "String"}
+    }
+  },
+  "tipSubtotalLabel": "Сумма без чаевых: {amount} {currency}",
+  "@tipSubtotalLabel": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "tipAddAction": "Добавить в чек",
+  "tipSuccessSnackbar": "Чаевые добавлены",
+  "tipErrorSubtotalZero": "Сумма позиций равна нулю — сначала добавьте позиции.",
+  "tipErrorPercentRange": "Введите процент от 0 до 100.",
+  "tipErrorFixedPositive": "Введите сумму больше 0.",
+  "tipLineNamePercent": "Чаевые ({percent}%)",
+  "@tipLineNamePercent": {
+    "placeholders": {
+      "percent": {"type": "String"}
+    }
+  },
+  "tipLineNameFixed": "Чаевые (фикс)"
 }

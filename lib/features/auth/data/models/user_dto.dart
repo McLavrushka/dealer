@@ -11,6 +11,7 @@ abstract class UserDto with _$UserDto {
     required String email,
     String? avatarUrl,
     String? currencyDefault,
+    String? transferComment,
   }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) => _$UserDtoFromJson(json);

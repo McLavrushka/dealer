@@ -101,6 +101,7 @@ class AuthViewModel extends _$AuthViewModel {
   Future<void> updateProfile({
     String? name,
     String? currencyDefault,
+    String? transferComment,
   }) async {
     final current = state.valueOrNull;
     if (current == null) return;
@@ -109,7 +110,11 @@ class AuthViewModel extends _$AuthViewModel {
     state = await AsyncValue.guard(() async {
       final repo = ref.read(authRepositoryProvider);
       return repo.updateMe(
-        UpdateProfileRequest(name: name, currencyDefault: currencyDefault),
+        UpdateProfileRequest(
+          name: name,
+          currencyDefault: currencyDefault,
+          transferComment: transferComment,
+        ),
       );
     });
   }

@@ -12,6 +12,7 @@ _UserDto _$UserDtoFromJson(Map<String, dynamic> json) => _UserDto(
   email: json['email'] as String,
   avatarUrl: json['avatarUrl'] as String?,
   currencyDefault: json['currencyDefault'] as String?,
+  transferComment: json['transferComment'] as String?,
 );
 
 Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{
   'email': instance.email,
   'avatarUrl': instance.avatarUrl,
   'currencyDefault': instance.currencyDefault,
+  'transferComment': instance.transferComment,
 };

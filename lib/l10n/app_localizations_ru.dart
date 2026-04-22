@@ -72,6 +72,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get defaultCurrencyLabel => 'Валюта по умолчанию';
 
   @override
+  String get transferCommentLabel => 'Данные для перевода';
+
+  @override
+  String get transferCommentHint =>
+      'Карта/телефон и банк (например: Тинькофф +7… / Сбер **** 1234)';
+
+  @override
   String get currencyCodeHint => 'USD / EUR / RUB';
 
   @override
@@ -452,6 +459,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get doneButton => 'Готово';
 
   @override
+  String get sharePaymentDetailsHeader => 'Мои реквизиты для перевода';
+
+  @override
   String lineTotalLabel(String amount) {
     return 'Сумма строки: $amount';
   }
@@ -474,4 +484,56 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorNoLinesInPaste => 'В тексте не найдено позиций';
+
+  @override
+  String get tippingMenuButtonTooltip => 'Добавить чаевые';
+
+  @override
+  String get tipSheetTitle => 'Чаевые';
+
+  @override
+  String get tipModePercent => 'Процент от суммы';
+
+  @override
+  String get tipModeFixed => 'Фиксированная сумма';
+
+  @override
+  String get tipPercentFieldLabel => 'Процент (%)';
+
+  @override
+  String get tipPercentFieldHint => 'например 10';
+
+  @override
+  String tipFixedFieldLabel(String currency) {
+    return 'Сумма ($currency)';
+  }
+
+  @override
+  String tipSubtotalLabel(String amount, String currency) {
+    return 'Сумма без чаевых: $amount $currency';
+  }
+
+  @override
+  String get tipAddAction => 'Добавить в чек';
+
+  @override
+  String get tipSuccessSnackbar => 'Чаевые добавлены';
+
+  @override
+  String get tipErrorSubtotalZero =>
+      'Сумма позиций равна нулю — сначала добавьте позиции.';
+
+  @override
+  String get tipErrorPercentRange => 'Введите процент от 0 до 100.';
+
+  @override
+  String get tipErrorFixedPositive => 'Введите сумму больше 0.';
+
+  @override
+  String tipLineNamePercent(String percent) {
+    return 'Чаевые ($percent%)';
+  }
+
+  @override
+  String get tipLineNameFixed => 'Чаевые (фикс)';
 }

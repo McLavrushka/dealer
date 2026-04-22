@@ -6,7 +6,7 @@ part of 'auth_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authViewModelHash() => r'cd1d7efe23c45da60458261a0ab189345f6b6ff7';
+String _$authViewModelHash() => r'168ff66893cb135393304c51b2285f1f44c94b1d';
 
 /// Not autoDispose: otherwise after login/navigation there can be a moment with
 /// no listeners, the provider is disposed, and the next [build] calls `me()` again

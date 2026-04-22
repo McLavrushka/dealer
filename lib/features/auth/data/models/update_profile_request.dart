@@ -8,6 +8,7 @@ abstract class UpdateProfileRequest with _$UpdateProfileRequest {
   const factory UpdateProfileRequest({
     String? name,
     String? currencyDefault,
+    String? transferComment,
   }) = _UpdateProfileRequest;
 
   factory UpdateProfileRequest.fromJson(Map<String, dynamic> json) =>

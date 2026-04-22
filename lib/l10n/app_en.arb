@@ -21,6 +21,8 @@
   "languageOptionRussian": "Russian",
   "languageOptionEnglish": "English",
   "defaultCurrencyLabel": "Default currency",
+  "transferCommentLabel": "Payment details",
+  "transferCommentHint": "Card/phone and preferred bank (e.g. Tinkoff +7… / Sber **** 1234)",
   "currencyCodeHint": "USD / EUR / RUB",
   "saveButton": "Save",
   "logoutButton": "Logout",
@@ -176,6 +178,7 @@
   "splitScreenTitle": "Split",
   "summaryLabel": "Summary",
   "doneButton": "Done",
+  "sharePaymentDetailsHeader": "My payment details",
   "lineTotalLabel": "Line total: {amount}",
   "@lineTotalLabel": {
     "placeholders": {
@@ -191,5 +194,36 @@
   "errorNoTextRecognized": "No text recognized",
   "errorCouldNotParseOcrLines": "Could not parse positions from OCR text",
   "errorCouldNotParseQrFromImage": "No QR code found in the selected image",
-  "errorNoLinesInPaste": "No line items found in text"
+  "errorNoLinesInPaste": "No line items found in text",
+  "tippingMenuButtonTooltip": "Add tip",
+  "tipSheetTitle": "Add tip",
+  "tipModePercent": "Percent of subtotal",
+  "tipModeFixed": "Fixed amount",
+  "tipPercentFieldLabel": "Percent (%)",
+  "tipPercentFieldHint": "e.g. 10",
+  "tipFixedFieldLabel": "Amount ({currency})",
+  "@tipFixedFieldLabel": {
+    "placeholders": {
+      "currency": {"type": "String"}
+    }
+  },
+  "tipSubtotalLabel": "Subtotal (without tips): {amount} {currency}",
+  "@tipSubtotalLabel": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "currency": {"type": "String"}
+    }
+  },
+  "tipAddAction": "Add to bill",
+  "tipSuccessSnackbar": "Tip added",
+  "tipErrorSubtotalZero": "Subtotal is zero — add items before a tip.",
+  "tipErrorPercentRange": "Enter a percent between 0 and 100.",
+  "tipErrorFixedPositive": "Enter an amount greater than 0.",
+  "tipLineNamePercent": "Tip ({percent}%)",
+  "@tipLineNamePercent": {
+    "placeholders": {
+      "percent": {"type": "String"}
+    }
+  },
+  "tipLineNameFixed": "Tip (fixed amount)"
 }

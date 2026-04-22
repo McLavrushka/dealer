@@ -10,6 +10,7 @@ import '../../../core/utils/snackbars.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/error_view.dart';
 import '../../../core/widgets/skeleton_loader.dart';
+import '../../auth/presentation/auth_view_model.dart';
 import '../../groups/data/group_providers.dart';
 import '../../groups/data/models/group_dto.dart';
 import '../data/models/bill_dto.dart';
@@ -98,7 +99,7 @@ class BillResultScreen extends ConsumerWidget {
                         ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  Text('${bill.total} ${bill.currency} • ${bill.status}'),
+                  Text('${bill.total.toStringAsFixed(2)} ${bill.currency}'),
                   const SizedBox(height: AppSpacing.lg),
                   ...group.members.map((m) {
                     final t = totals[m.userId] ?? 0;
@@ -138,7 +139,7 @@ class BillResultScreen extends ConsumerWidget {
                   AppButton(
                     label: l10n.shareButton,
                     variant: AppButtonVariant.secondary,
-                    onPressed: () => _share(context, bill, group, totals),
+                    onPressed: () => _share(context, ref, bill, group, totals),
                   ),
                 ],
               ),
@@ -151,17 +152,27 @@ class BillResultScreen extends ConsumerWidget {
 
   Future<void> _share(
     BuildContext context,
+    WidgetRef ref,
     BillDto bill,
     GroupDto group,
     Map<String, num> totals,
   ) async {
+    final l10n = context.l10n;
+    final me = ref.read(authViewModelProvider).valueOrNull;
+    final transfer = (me?.transferComment ?? '').trim();
+
     final buf = StringBuffer()
       ..writeln(bill.title)
-      ..writeln('${bill.total} ${bill.currency} (${bill.status})')
+      ..writeln('${bill.total.toStringAsFixed(2)} ${bill.currency}')
       ..writeln();
     for (final m in group.members) {
       final t = totals[m.userId] ?? 0;
       buf.writeln('${m.name}: ${t.toStringAsFixed(2)} ${bill.currency}');
+    }
+    if (transfer.isNotEmpty) {
+      buf.writeln();
+      buf.writeln(l10n.sharePaymentDetailsHeader);
+      buf.writeln(transfer);
     }
     await Share.share(buf.toString());
     if (!context.mounted) return;

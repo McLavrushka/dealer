@@ -18,6 +18,8 @@ class AppTextField extends StatelessWidget {
     this.suffixIcon,
     this.onSubmitted,
     this.textCapitalization = TextCapitalization.none,
+    this.minLines,
+    this.maxLines = 1,
   });
 
   final TextEditingController controller;
@@ -33,6 +35,8 @@ class AppTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final ValueChanged<String>? onSubmitted;
   final TextCapitalization textCapitalization;
+  final int? minLines;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +50,8 @@ class AppTextField extends StatelessWidget {
       obscureText: obscureText,
       autofillHints: autofillHints,
       onFieldSubmitted: onSubmitted,
+      minLines: minLines,
+      maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,

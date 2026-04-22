@@ -104,7 +104,7 @@ class GroupScreen extends ConsumerWidget {
                         contentPadding: EdgeInsets.zero,
                         title: Text(bill.title),
                         subtitle: Text(
-                          '${bill.total} ${bill.currency} • ${bill.status}',
+                          '${bill.total.toStringAsFixed(2)} ${bill.currency}',
                         ),
                         trailing: IconButton(
                           tooltip: l10n.deleteBillTooltip,

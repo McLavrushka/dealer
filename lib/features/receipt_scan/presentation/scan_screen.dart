@@ -14,9 +14,7 @@ import '../../bills/data/models/add_bill_item_request.dart';
 import '../../bills/presentation/bill_view_model.dart';
 import '../data/scan_providers.dart';
 import '../domain/receipt_line.dart';
-import '../domain/receipt_ocr_preprocess.dart';
-import '../domain/receipt_ocr_temp.dart';
-import '../domain/receipt_ocr_text_builder.dart';
+import '../domain/receipt_ocr_mlkit_latin.dart';
 
 /// QR / OCR scan. On [kIsWeb], only manual paste is available.
 class ScanScreen extends ConsumerStatefulWidget {
@@ -313,22 +311,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   Future<void> _runOcrOnImageFile(XFile file) async {
     final l10n = context.l10n;
     setState(() => _busy = true);
-    // ML Kit: [TextRecognitionScript.latin] = Latin / Western script (English, etc.).
-    // Default constructor also defaults to Latin; we set it explicitly for clarity.
-    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    String? tmpPath;
     try {
       final raw = await file.readAsBytes();
-      final processed = preprocessReceiptImageForLatinScriptOcr(raw);
-      tmpPath = await writeReceiptOcrTempJpeg(processed);
-
-      final input = InputImage.fromFilePath(tmpPath);
-      final result = await recognizer.processImage(input);
-      final text = ReceiptOcrTextBuilder.build(result);
+      final parse = ref.read(parseOcrUseCaseProvider);
+      final text = await ReceiptOcrMlKitLatin.recognizeBestFromBytes(raw, parse);
       if (text.trim().isEmpty) {
         throw StateError(l10n.errorNoTextRecognized);
       }
-      final lines = ref.read(parseOcrUseCaseProvider).run(text);
+      final lines = parse.run(text);
       if (lines.isEmpty) {
         throw StateError(l10n.errorCouldNotParseOcrLines);
       }
@@ -338,8 +328,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     } catch (e) {
       if (mounted) Snackbars.showError(context, e);
     } finally {
-      await recognizer.close();
-      if (tmpPath != null) await deleteReceiptOcrTemp(tmpPath);
       if (mounted) setState(() => _busy = false);
     }
   }

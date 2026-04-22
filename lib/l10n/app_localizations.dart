@@ -224,6 +224,18 @@ abstract class AppLocalizations {
   /// **'Default currency'**
   String get defaultCurrencyLabel;
 
+  /// No description provided for @transferCommentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment details'**
+  String get transferCommentLabel;
+
+  /// No description provided for @transferCommentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Card/phone and preferred bank (e.g. Tinkoff +7… / Sber **** 1234)'**
+  String get transferCommentHint;
+
   /// No description provided for @currencyCodeHint.
   ///
   /// In en, this message translates to:
@@ -938,6 +950,12 @@ abstract class AppLocalizations {
   /// **'Done'**
   String get doneButton;
 
+  /// No description provided for @sharePaymentDetailsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'My payment details'**
+  String get sharePaymentDetailsHeader;
+
   /// No description provided for @lineTotalLabel.
   ///
   /// In en, this message translates to:
@@ -973,6 +991,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No line items found in text'**
   String get errorNoLinesInPaste;
+
+  /// No description provided for @tippingMenuButtonTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tip'**
+  String get tippingMenuButtonTooltip;
+
+  /// No description provided for @tipSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tip'**
+  String get tipSheetTitle;
+
+  /// No description provided for @tipModePercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Percent of subtotal'**
+  String get tipModePercent;
+
+  /// No description provided for @tipModeFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed amount'**
+  String get tipModeFixed;
+
+  /// No description provided for @tipPercentFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Percent (%)'**
+  String get tipPercentFieldLabel;
+
+  /// No description provided for @tipPercentFieldHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 10'**
+  String get tipPercentFieldHint;
+
+  /// No description provided for @tipFixedFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount ({currency})'**
+  String tipFixedFieldLabel(String currency);
+
+  /// No description provided for @tipSubtotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal (without tips): {amount} {currency}'**
+  String tipSubtotalLabel(String amount, String currency);
+
+  /// No description provided for @tipAddAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to bill'**
+  String get tipAddAction;
+
+  /// No description provided for @tipSuccessSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip added'**
+  String get tipSuccessSnackbar;
+
+  /// No description provided for @tipErrorSubtotalZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal is zero — add items before a tip.'**
+  String get tipErrorSubtotalZero;
+
+  /// No description provided for @tipErrorPercentRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a percent between 0 and 100.'**
+  String get tipErrorPercentRange;
+
+  /// No description provided for @tipErrorFixedPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than 0.'**
+  String get tipErrorFixedPositive;
+
+  /// No description provided for @tipLineNamePercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip ({percent}%)'**
+  String tipLineNamePercent(String percent);
+
+  /// No description provided for @tipLineNameFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip (fixed amount)'**
+  String get tipLineNameFixed;
 }
 
 class _AppLocalizationsDelegate

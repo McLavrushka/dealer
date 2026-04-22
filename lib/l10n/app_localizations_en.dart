@@ -72,6 +72,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get defaultCurrencyLabel => 'Default currency';
 
   @override
+  String get transferCommentLabel => 'Payment details';
+
+  @override
+  String get transferCommentHint =>
+      'Card/phone and preferred bank (e.g. Tinkoff +7… / Sber **** 1234)';
+
+  @override
   String get currencyCodeHint => 'USD / EUR / RUB';
 
   @override
@@ -451,6 +458,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doneButton => 'Done';
 
   @override
+  String get sharePaymentDetailsHeader => 'My payment details';
+
+  @override
   String lineTotalLabel(String amount) {
     return 'Line total: $amount';
   }
@@ -473,4 +483,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorNoLinesInPaste => 'No line items found in text';
+
+  @override
+  String get tippingMenuButtonTooltip => 'Add tip';
+
+  @override
+  String get tipSheetTitle => 'Add tip';
+
+  @override
+  String get tipModePercent => 'Percent of subtotal';
+
+  @override
+  String get tipModeFixed => 'Fixed amount';
+
+  @override
+  String get tipPercentFieldLabel => 'Percent (%)';
+
+  @override
+  String get tipPercentFieldHint => 'e.g. 10';
+
+  @override
+  String tipFixedFieldLabel(String currency) {
+    return 'Amount ($currency)';
+  }
+
+  @override
+  String tipSubtotalLabel(String amount, String currency) {
+    return 'Subtotal (without tips): $amount $currency';
+  }
+
+  @override
+  String get tipAddAction => 'Add to bill';
+
+  @override
+  String get tipSuccessSnackbar => 'Tip added';
+
+  @override
+  String get tipErrorSubtotalZero =>
+      'Subtotal is zero — add items before a tip.';
+
+  @override
+  String get tipErrorPercentRange => 'Enter a percent between 0 and 100.';
+
+  @override
+  String get tipErrorFixedPositive => 'Enter an amount greater than 0.';
+
+  @override
+  String tipLineNamePercent(String percent) {
+    return 'Tip ($percent%)';
+  }
+
+  @override
+  String get tipLineNameFixed => 'Tip (fixed amount)';
 }

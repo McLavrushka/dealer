@@ -11,6 +11,7 @@ _UpdateProfileRequest _$UpdateProfileRequestFromJson(
 ) => _UpdateProfileRequest(
   name: json['name'] as String?,
   currencyDefault: json['currencyDefault'] as String?,
+  transferComment: json['transferComment'] as String?,
 );
 
 Map<String, dynamic> _$UpdateProfileRequestToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$UpdateProfileRequestToJson(
 ) => <String, dynamic>{
   'name': instance.name,
   'currencyDefault': instance.currencyDefault,
+  'transferComment': instance.transferComment,
 };
