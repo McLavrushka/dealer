@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/context_l10n.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/settings/app_settings_provider.dart';
 import '../../../core/storage/hive_service.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/snackbars.dart';
@@ -47,6 +48,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     });
 
     final state = ref.watch(authViewModelProvider);
+    final appSettings = ref.watch(appSettingsProvider);
     final l10n = context.l10n;
 
     return Scaffold(
@@ -73,7 +75,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               if (_currency.text != nextCurrency) _currency.text = nextCurrency;
             });
 
-            return Padding(
+            return SingleChildScrollView(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Form(
                 key: _formKey,
@@ -90,6 +92,104 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       controller: _currency,
                       label: l10n.defaultCurrencyLabel,
                       hint: l10n.currencyCodeHint,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      l10n.settingsAppearanceSection,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.settingsThemeLabel,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
+                      children: [
+                        ChoiceChip(
+                          label: Text(l10n.themeOptionSystem),
+                          selected: appSettings.themeMode == ThemeMode.system,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            ref
+                                .read(appSettingsProvider.notifier)
+                                .setThemeMode(ThemeMode.system);
+                          },
+                        ),
+                        ChoiceChip(
+                          label: Text(l10n.themeOptionLight),
+                          selected: appSettings.themeMode == ThemeMode.light,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            ref
+                                .read(appSettingsProvider.notifier)
+                                .setThemeMode(ThemeMode.light);
+                          },
+                        ),
+                        ChoiceChip(
+                          label: Text(l10n.themeOptionDark),
+                          selected: appSettings.themeMode == ThemeMode.dark,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            ref
+                                .read(appSettingsProvider.notifier)
+                                .setThemeMode(ThemeMode.dark);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      l10n.settingsLanguageLabel,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
+                      children: [
+                        ChoiceChip(
+                          label: Text(l10n.languageOptionSystem),
+                          selected:
+                              appSettings.localePreference == AppLocalePreference.system,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            ref
+                                .read(appSettingsProvider.notifier)
+                                .setLocalePreference(AppLocalePreference.system);
+                          },
+                        ),
+                        ChoiceChip(
+                          label: Text(l10n.languageOptionRussian),
+                          selected:
+                              appSettings.localePreference == AppLocalePreference.ru,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            ref
+                                .read(appSettingsProvider.notifier)
+                                .setLocalePreference(AppLocalePreference.ru);
+                          },
+                        ),
+                        ChoiceChip(
+                          label: Text(l10n.languageOptionEnglish),
+                          selected:
+                              appSettings.localePreference == AppLocalePreference.en,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            ref
+                                .read(appSettingsProvider.notifier)
+                                .setLocalePreference(AppLocalePreference.en);
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     AppButton(

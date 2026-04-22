@@ -25,9 +25,15 @@ class GroupRepositoryImpl implements GroupRepository {
 
   @override
   Future<GroupDto> join(String code) async {
-    final safeCode = Uri.encodeComponent(JoinInviteCode.normalize(code));
+    final segment = JoinInviteCode.forJoinPathSegment(code);
+    if (segment.isEmpty) {
+      throw ArgumentError.value(code, 'code', 'invite code is empty after cleanup');
+    }
+    // [ApiConfig.apiV1] is `/api/v1` — path must start with `/` or Dio merges
+    // `https://host` + `api/...` into `https://hostapi/...` (404, wrong URL in errors).
+    final safe = Uri.encodeComponent(segment);
     final response = await _dio.post<Map<String, dynamic>>(
-      '${ApiConfig.apiV1}/groups/join/$safeCode',
+      '${ApiConfig.apiV1}/groups/join/$safe',
     );
     return GroupDto.fromJson(response.data!);
   }

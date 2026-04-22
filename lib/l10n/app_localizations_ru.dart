@@ -42,6 +42,33 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileTitle => 'Профиль';
 
   @override
+  String get settingsAppearanceSection => 'Оформление';
+
+  @override
+  String get settingsThemeLabel => 'Тема';
+
+  @override
+  String get settingsLanguageLabel => 'Язык';
+
+  @override
+  String get themeOptionSystem => 'Как в системе';
+
+  @override
+  String get themeOptionLight => 'Светлая';
+
+  @override
+  String get themeOptionDark => 'Тёмная';
+
+  @override
+  String get languageOptionSystem => 'Как в системе';
+
+  @override
+  String get languageOptionRussian => 'Русский';
+
+  @override
+  String get languageOptionEnglish => 'English';
+
+  @override
   String get defaultCurrencyLabel => 'Валюта по умолчанию';
 
   @override
@@ -54,14 +81,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get logoutButton => 'Выйти';
 
   @override
-  String get debugClearHiveButton => 'Отладка: очистить Hive';
+  String get debugClearHiveButton => 'Удалить сохраненные на устройстве данные';
 
   @override
   String get clearStorageDialogTitle => 'Очистить локальные данные?';
 
   @override
   String get clearStorageDialogBody =>
-      'Будут удалены токены, флаг онбординга и кэш Hive на этом устройстве.';
+      'Будут удалены токены, флаг онбординга и кэш на этом устройстве.';
 
   @override
   String get cancelButton => 'Отмена';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../network/dio_error_user_message.dart';
 
 class Snackbars {
   static void showSuccess(BuildContext context, String message) {
@@ -26,7 +27,7 @@ class Snackbars {
   }
 
   static String _message(BuildContext context, Object error) {
-    final text = error.toString();
+    final text = userMessageForApiError(error);
     if (text.isEmpty) {
       return AppLocalizations.of(context).genericSomethingWentWrong;
     }

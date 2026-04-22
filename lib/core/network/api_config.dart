@@ -13,9 +13,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 abstract final class ApiConfig {
   static const baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    // defaultValue: 'https://89.169.134.38.sslip.io',
+    defaultValue: 'https://89.169.134.38.sslip.io',
       // defaultValue: 'http://localhost:8000',
-        defaultValue: 'http://192.168.0.4:8000',
+        // defaultValue: 'http://192.168.0.4:8000',
 
   );
 

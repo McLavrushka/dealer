@@ -77,7 +77,13 @@ class AuthInterceptor extends Interceptor {
   bool _isRequestToAppBackend(RequestOptions options) {
     try {
       final base = Uri.parse(ApiConfig.resolvedBaseUrl);
-      return options.uri.authority == base.authority;
+      final req = options.uri;
+      if (req.host.isEmpty) return false;
+      // Compare host+scheme, not full authority: :443 vs default and typos in
+      // API_BASE_URL must not skip attaching Bearer (unauthenticated calls often
+      // look like “404” on join / group detail).
+      return req.scheme == base.scheme &&
+          req.host.toLowerCase() == base.host.toLowerCase();
     } catch (_) {
       return false;
     }

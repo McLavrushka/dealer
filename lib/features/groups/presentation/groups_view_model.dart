@@ -4,8 +4,6 @@ import '../../../core/storage/hive_service.dart';
 import '../data/group_providers.dart';
 import '../data/models/create_group_request.dart';
 import '../data/models/group_dto.dart';
-import '../domain/join_invite_code.dart';
-
 part 'groups_view_model.g.dart';
 
 @riverpod
@@ -53,11 +51,10 @@ class GroupsViewModel extends _$GroupsViewModel {
 
   Future<GroupDto> joinGroup({required String code}) async {
     final prev = state.valueOrNull ?? const [];
-    GroupDto? joinedResult;
+    late final GroupDto joined;
     state = await AsyncValue.guard(() async {
       final repo = ref.read(groupRepositoryProvider);
-      final joined = await repo.join(JoinInviteCode.normalize(code));
-      joinedResult = joined;
+      joined = await repo.join(code);
 
       final exists = prev.any((g) => g.id == joined.id);
       final next = exists ? prev : [joined, ...prev];
@@ -65,11 +62,15 @@ class GroupsViewModel extends _$GroupsViewModel {
           .setCachedGroups(next.map((g) => g.toJson()).toList());
       return next;
     });
-    return switch (state) {
-      AsyncError(:final error) => throw error,
-      AsyncData<List<GroupDto>>() => joinedResult!,
-      _ => throw StateError('joinGroup: unexpected state $state'),
-    };
+    if (state is AsyncError) {
+      final err = state.error;
+      // Do not replace the whole list UI with an error screen after a failed join.
+      state = AsyncData(prev);
+      if (err != null) throw err;
+      throw StateError('joinGroup failed');
+    }
+    if (state is AsyncData<List<GroupDto>>) return joined;
+    throw StateError('joinGroup: unexpected state $state');
   }
 
   Future<void> upsertCached(GroupDto group) async {

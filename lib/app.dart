@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/router/app_router.dart';
 import 'core/router/invite_incoming_uri.dart';
+import 'core/settings/app_settings_provider.dart';
 import 'core/storage/hive_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/adaptive_layout.dart';
@@ -71,16 +72,30 @@ class _DealerAppState extends ConsumerState<DealerApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
+    final settings = ref.watch(appSettingsProvider);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      locale: const Locale('ru'),
+      locale: settings.materialLocale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (settings.localePreference != AppLocalePreference.system) {
+          return settings.materialLocale ?? supportedLocales.first;
+        }
+        if (locale != null) {
+          for (final supported in supportedLocales) {
+            if (supported.languageCode == locale.languageCode) {
+              return supported;
+            }
+          }
+        }
+        return const Locale('ru');
+      },
       routerConfig: router,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: settings.themeMode,
       builder: (context, child) => AdaptiveLayout(child: child),
     );
   }

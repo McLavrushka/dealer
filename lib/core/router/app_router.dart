@@ -79,6 +79,12 @@ abstract final class BillScanExtra {
 
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
+  // Subscribe here so [GoRouter] is recreated when auth changes. The [redirect]
+  // callback must use [ref.read], not [ref.watch]: otherwise a synchronous
+  // [context.go] from e.g. [ref.listen] on [authViewModelProvider] runs
+  // redirect while auth is mid-notify → Riverpod asserts !_didChangeDependency.
+  ref.watch(authViewModelProvider);
+
   return GoRouter(
     initialLocation: _resolveInitialLocation(),
     routes: [
@@ -165,7 +171,7 @@ GoRouter appRouter(AppRouterRef ref) {
     errorPageBuilder: (context, state) =>
         const MaterialPage(child: _RedirectToGroups()),
     redirect: (context, state) {
-      final auth = ref.watch(authViewModelProvider);
+      final auth = ref.read(authViewModelProvider);
       final isAuthed =
           auth.valueOrNull != null || HiveService.instance.accessToken != null;
 

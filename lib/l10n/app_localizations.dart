@@ -164,6 +164,60 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profileTitle;
 
+  /// No description provided for @settingsAppearanceSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsAppearanceSection;
+
+  /// No description provided for @settingsThemeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsThemeLabel;
+
+  /// No description provided for @settingsLanguageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguageLabel;
+
+  /// No description provided for @themeOptionSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as device'**
+  String get themeOptionSystem;
+
+  /// No description provided for @themeOptionLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeOptionLight;
+
+  /// No description provided for @themeOptionDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeOptionDark;
+
+  /// No description provided for @languageOptionSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as device'**
+  String get languageOptionSystem;
+
+  /// No description provided for @languageOptionRussian.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get languageOptionRussian;
+
+  /// No description provided for @languageOptionEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageOptionEnglish;
+
   /// No description provided for @defaultCurrencyLabel.
   ///
   /// In en, this message translates to:
@@ -191,7 +245,7 @@ abstract class AppLocalizations {
   /// No description provided for @debugClearHiveButton.
   ///
   /// In en, this message translates to:
-  /// **'Debug: Clear Hive storage'**
+  /// **'Clean all app memory'**
   String get debugClearHiveButton;
 
   /// No description provided for @clearStorageDialogTitle.
@@ -203,7 +257,7 @@ abstract class AppLocalizations {
   /// No description provided for @clearStorageDialogBody.
   ///
   /// In en, this message translates to:
-  /// **'This will remove tokens, onboarding flag, and cached data from Hive on this device.'**
+  /// **'This will remove tokens, onboarding flag, and cached data on this device.'**
   String get clearStorageDialogBody;
 
   /// No description provided for @cancelButton.

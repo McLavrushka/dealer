@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/context_l10n.dart';
+import '../../../core/router/app_router.dart';
 import '../../../core/router/post_auth_route.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/snackbars.dart';
@@ -47,59 +48,87 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.registerTitle),
-        actions: [
-          TextButton(
-            onPressed: isLoading ? null : () => context.pop(),
-            child: Text(l10n.loginAction),
-          ),
-        ],
-      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppTextField(
-                  controller: _name,
-                  label: l10n.nameLabel,
-                  textInputAction: TextInputAction.next,
-                  validator: (v) => Validators.requiredField(l10n, v),
-                  enabled: !isLoading,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.registerTitle,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          AppTextField(
+                            controller: _name,
+                            label: l10n.nameLabel,
+                            textInputAction: TextInputAction.next,
+                            validator: (v) => Validators.requiredField(l10n, v),
+                            enabled: !isLoading,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          AppTextField(
+                            controller: _email,
+                            label: l10n.emailLabel,
+                            hint: l10n.emailHint,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: (v) => Validators.email(l10n, v),
+                            enabled: !isLoading,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          AppTextField(
+                            controller: _password,
+                            label: l10n.passwordLabel,
+                            obscureText: true,
+                            textInputAction: TextInputAction.done,
+                            validator: (v) => Validators.password(l10n, v),
+                            enabled: !isLoading,
+                            onSubmitted: (_) => _submit(),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          AppButton(
+                            label: l10n.createAccountButton,
+                            onPressed: isLoading ? null : _submit,
+                            isLoading: isLoading,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Center(
+                            child: TextButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () {
+                                      if (context.canPop()) {
+                                        context.pop();
+                                      } else {
+                                        context.go(AppRoutes.login);
+                                      }
+                                    },
+                              child: Text(l10n.loginAction),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                AppTextField(
-                  controller: _email,
-                  label: l10n.emailLabel,
-                  hint: l10n.emailHint,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  validator: (v) => Validators.email(l10n, v),
-                  enabled: !isLoading,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                AppTextField(
-                  controller: _password,
-                  label: l10n.passwordLabel,
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
-                  validator: (v) => Validators.password(l10n, v),
-                  enabled: !isLoading,
-                  onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: l10n.createAccountButton,
-                  onPressed: isLoading ? null : _submit,
-                  isLoading: isLoading,
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

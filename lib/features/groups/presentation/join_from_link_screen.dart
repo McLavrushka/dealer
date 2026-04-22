@@ -34,7 +34,7 @@ class _JoinFromLinkScreenState extends ConsumerState<JoinFromLinkScreen> {
     super.initState();
     final raw = widget.initialCode?.trim();
     if (raw != null && raw.isNotEmpty) {
-      _code.text = JoinInviteCode.normalize(raw);
+      _code.text = JoinInviteCode.extract(raw);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         HiveService.instance.clearPendingInviteCode();
       });
@@ -100,7 +100,7 @@ class _JoinFromLinkScreenState extends ConsumerState<JoinFromLinkScreen> {
     setState(() => _loading = true);
     try {
       final joined = await ref.read(groupsViewModelProvider.notifier).joinGroup(
-            code: JoinInviteCode.normalize(_code.text),
+            code: _code.text,
           );
       if (!mounted) return;
       context.go(AppRoutes.groupPath(joined.id));

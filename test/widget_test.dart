@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dealer/app.dart';
 
 void main() {
-  testWidgets('App starts on groups route', (WidgetTester tester) async {
+  testWidgets('App starts on login route', (WidgetTester tester) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: DealerApp(),
@@ -19,6 +19,6 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    expect(find.text('Groups'), findsOneWidget);
+    expect(find.text('Вход'), findsOneWidget);
   });
 }

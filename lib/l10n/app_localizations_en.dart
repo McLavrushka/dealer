@@ -42,6 +42,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileTitle => 'Profile';
 
   @override
+  String get settingsAppearanceSection => 'Appearance';
+
+  @override
+  String get settingsThemeLabel => 'Theme';
+
+  @override
+  String get settingsLanguageLabel => 'Language';
+
+  @override
+  String get themeOptionSystem => 'Same as device';
+
+  @override
+  String get themeOptionLight => 'Light';
+
+  @override
+  String get themeOptionDark => 'Dark';
+
+  @override
+  String get languageOptionSystem => 'Same as device';
+
+  @override
+  String get languageOptionRussian => 'Russian';
+
+  @override
+  String get languageOptionEnglish => 'English';
+
+  @override
   String get defaultCurrencyLabel => 'Default currency';
 
   @override
@@ -54,14 +81,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logoutButton => 'Logout';
 
   @override
-  String get debugClearHiveButton => 'Debug: Clear Hive storage';
+  String get debugClearHiveButton => 'Clean all app memory';
 
   @override
   String get clearStorageDialogTitle => 'Clear local storage?';
 
   @override
   String get clearStorageDialogBody =>
-      'This will remove tokens, onboarding flag, and cached data from Hive on this device.';
+      'This will remove tokens, onboarding flag, and cached data on this device.';
 
   @override
   String get cancelButton => 'Cancel';

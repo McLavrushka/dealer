@@ -1,5 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'package:flutter/material.dart';
+
 import 'hive_keys.dart';
 
 class HiveService {
@@ -48,6 +50,41 @@ class HiveService {
   Future<void> clearPendingInviteCode() async {
     if (!_isInitialized) return;
     await _appBox.delete(HiveKeys.pendingInviteCode);
+  }
+
+  /// `ThemeMode.system` | `light` | `dark`. Default: system.
+  ThemeMode get themeModePreference {
+    if (!_isInitialized) return ThemeMode.system;
+    final raw = _appBox.get(HiveKeys.themeMode);
+    if (raw == 'light') return ThemeMode.light;
+    if (raw == 'dark') return ThemeMode.dark;
+    return ThemeMode.system;
+  }
+
+  Future<void> setThemeModePreference(ThemeMode mode) async {
+    if (!_isInitialized) await init();
+    final s = switch (mode) {
+      ThemeMode.light => 'light',
+      ThemeMode.dark => 'dark',
+      ThemeMode.system => 'system',
+    };
+    await _appBox.put(HiveKeys.themeMode, s);
+  }
+
+  /// `system` | `ru` | `en`. Default: `ru` (previous app default).
+  String get localePreferenceCode {
+    if (!_isInitialized) return 'ru';
+    final raw = _appBox.get(HiveKeys.appLocale);
+    if (raw is String && raw.trim().isNotEmpty) return raw.trim();
+    return 'ru';
+  }
+
+  Future<void> setLocalePreferenceCode(String code) async {
+    if (!_isInitialized) await init();
+    final c = code.trim().toLowerCase();
+    if (c == 'system' || c == 'ru' || c == 'en') {
+      await _appBox.put(HiveKeys.appLocale, c);
+    }
   }
 
   String? get accessToken {

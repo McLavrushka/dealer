@@ -46,51 +46,73 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.loginTitle),
-        actions: [
-          TextButton(
-            onPressed: isLoading ? null : () => context.push(AppRoutes.register),
-            child: Text(l10n.registerAction),
-          ),
-        ],
-      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppTextField(
-                  controller: _email,
-                  label: l10n.emailLabel,
-                  hint: l10n.emailHint,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  validator: (v) => Validators.email(l10n, v),
-                  enabled: !isLoading,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.loginTitle,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          AppTextField(
+                            controller: _email,
+                            label: l10n.emailLabel,
+                            hint: l10n.emailHint,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: (v) => Validators.email(l10n, v),
+                            enabled: !isLoading,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          AppTextField(
+                            controller: _password,
+                            label: l10n.passwordLabel,
+                            obscureText: true,
+                            textInputAction: TextInputAction.done,
+                            validator: (v) => Validators.password(l10n, v),
+                            enabled: !isLoading,
+                            onSubmitted: (_) => _submit(),
+                          ),
+                          const SizedBox(height: AppSpacing.lg),
+                          AppButton(
+                            label: l10n.continueButton,
+                            onPressed: isLoading ? null : _submit,
+                            isLoading: isLoading,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Center(
+                            child: TextButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () => context.push(AppRoutes.register),
+                              child: Text(l10n.registerAction),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                AppTextField(
-                  controller: _password,
-                  label: l10n.passwordLabel,
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
-                  validator: (v) => Validators.password(l10n, v),
-                  enabled: !isLoading,
-                  onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: l10n.continueButton,
-                  onPressed: isLoading ? null : _submit,
-                  isLoading: isLoading,
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

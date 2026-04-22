@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/context_l10n.dart';
+import '../../../core/network/dio_error_user_message.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/snackbars.dart';
@@ -20,11 +21,6 @@ class GroupsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(groupsViewModelProvider, (prev, next) {
-      final error = next.error;
-      if (error != null) Snackbars.showError(context, error);
-    });
-
     final state = ref.watch(groupsViewModelProvider);
     final l10n = context.l10n;
 
@@ -51,7 +47,7 @@ class GroupsScreen extends ConsumerWidget {
         child: state.when(
           loading: () => const SkeletonList(),
           error: (e, _) => ErrorView(
-            message: e.toString(),
+            message: userMessageForApiError(e),
             onRetry: () => ref.read(groupsViewModelProvider.notifier).refresh(),
           ),
           data: (groups) {
@@ -105,7 +101,7 @@ class GroupsScreen extends ConsumerWidget {
           context: context,
           isScrollControlled: true,
           showDragHandle: true,
-          builder: (_) => _JoinGroupSheet(ref: ref),
+          builder: (_) => _JoinGroupSheet(ref: ref, parentContext: context),
         );
     }
   }
@@ -237,9 +233,15 @@ class _CreateGroupSheetState extends ConsumerState<_CreateGroupSheet> {
 }
 
 class _JoinGroupSheet extends ConsumerStatefulWidget {
-  const _JoinGroupSheet({required this.ref});
+  const _JoinGroupSheet({
+    required this.ref,
+    required this.parentContext,
+  });
 
   final WidgetRef ref;
+  /// [GroupsScreen] context — still valid after the sheet is popped (unlike the
+  /// sheet’s own [BuildContext] for [GoRouter.push]).
+  final BuildContext parentContext;
 
   @override
   ConsumerState<_JoinGroupSheet> createState() => _JoinGroupSheetState();
@@ -303,10 +305,17 @@ class _JoinGroupSheetState extends ConsumerState<_JoinGroupSheet> {
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(groupsViewModelProvider.notifier).joinGroup(
-            code: _code.text.trim().toUpperCase(),
+      final joined = await ref.read(groupsViewModelProvider.notifier).joinGroup(
+            code: _code.text,
           );
-      if (mounted) Navigator.of(context).pop();
+      if (!mounted) return;
+      final groupId = joined.id;
+      final parent = widget.parentContext;
+      Navigator.of(context).pop();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!parent.mounted) return;
+        GoRouter.of(parent).push(AppRoutes.groupPath(groupId));
+      });
     } catch (e) {
       if (mounted) Snackbars.showError(context, e);
     } finally {
