@@ -1,0 +1,25 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'user_dto.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_UserDto _$UserDtoFromJson(Map<String, dynamic> json) => _UserDto(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  email: json['email'] as String,
+  avatarUrl: _readAvatarUrl(json, 'avatarUrl') as String?,
+  currencyDefault: _readCurrencyDefault(json, 'currencyDefault') as String?,
+  transferComment: _readTransferComment(json, 'transferComment') as String?,
+);
+
+Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'email': instance.email,
+  'avatarUrl': instance.avatarUrl,
+  'currencyDefault': instance.currencyDefault,
+  'transferComment': instance.transferComment,
+};

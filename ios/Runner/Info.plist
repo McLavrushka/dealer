@@ -66,5 +66,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is used to scan receipt QR codes and capture receipt photos for OCR.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need photo library access to pick a receipt image for OCR.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We may save processed receipt images to your library.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.dealer.invite</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>dealer</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
