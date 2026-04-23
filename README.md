@@ -1,17 +1,16 @@
-# dealer
+# Dealer
 
-A new Flutter project.
+**Dealer** — Flutter‑приложение для разделения ресторанного чека в компании: создание групп, добавление позиций, распределение долей и удобное подведение итогов (включая шаринг).
 
-## Getting Started
+- **Аналитика проекта**: [`dealer_analytics.md`](./docs/dealer_analytics.md)
+- **LEAN CANVAS**:[Dealer_Lean_Canvas.pdf](./docs/Dealer_Lean_Canvas.pdf)
 
-This project is a starting point for a Flutter application.
+## Development
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+flutter run
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Demo
+https://drive.google.com/drive/folders/1CINgYxA_DTw72wYSmb1Tr3SLJRqeU6P9?usp=share_link
