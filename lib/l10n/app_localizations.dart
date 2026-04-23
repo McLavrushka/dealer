@@ -248,6 +248,12 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get saveButton;
 
+  /// No description provided for @profileSavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved'**
+  String get profileSavedMessage;
+
   /// No description provided for @logoutButton.
   ///
   /// In en, this message translates to:

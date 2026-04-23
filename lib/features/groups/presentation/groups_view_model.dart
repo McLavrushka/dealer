@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/storage/hive_service.dart';
+import '../../auth/presentation/auth_view_model.dart';
 import '../data/group_providers.dart';
 import '../data/models/create_group_request.dart';
 import '../data/models/group_dto.dart';
@@ -13,19 +14,54 @@ class GroupsViewModel extends _$GroupsViewModel {
     if (!HiveService.instance.isInitialized) {
       await HiveService.instance.init();
     }
-    final cached = HiveService.instance.cachedGroups;
+    final userId = ref.watch(authViewModelProvider).valueOrNull?.id;
+    if (userId == null || userId.isEmpty) return const [];
+
+    final fromHive = await _groupsFromHive(userId);
+    return _mergeWithServer(userId, fromHive);
+  }
+
+  Future<List<GroupDto>> _groupsFromHive(String userId) async {
+    final cached = await HiveService.instance.cachedGroupsForUser(userId);
     if (cached.isEmpty) return const [];
     return cached.map(GroupDto.fromJson).toList();
   }
 
+  /// Reconcile with `GET /groups/{id}` for up-to-date members (and persist to Hive).
+  Future<List<GroupDto>> _mergeWithServer(
+    String userId,
+    List<GroupDto> groups,
+  ) async {
+    if (groups.isEmpty) return groups;
+    final repo = ref.read(groupRepositoryProvider);
+    final updated = await Future.wait(
+      groups.map((g) async {
+        try {
+          return await repo.getById(g.id);
+        } catch (_) {
+          return g;
+        }
+      }),
+    );
+    await HiveService.instance.setCachedGroupsForUser(
+      userId,
+      updated.map((e) => e.toJson()).toList(),
+    );
+    return updated;
+  }
+
+  /// Pull-to-refresh: same as initial load — Hive then server merge.
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       if (!HiveService.instance.isInitialized) {
         await HiveService.instance.init();
       }
-      final cached = HiveService.instance.cachedGroups;
-      return cached.map(GroupDto.fromJson).toList();
+      final userId = ref.read(authViewModelProvider).valueOrNull?.id;
+      if (userId == null || userId.isEmpty) return const <GroupDto>[];
+
+      final fromHive = await _groupsFromHive(userId);
+      return _mergeWithServer(userId, fromHive);
     });
   }
 
@@ -43,8 +79,14 @@ class GroupsViewModel extends _$GroupsViewModel {
       );
 
       final next = [created, ...prev];
-      await HiveService.instance
-          .setCachedGroups(next.map((g) => g.toJson()).toList());
+      final uid = ref.read(authViewModelProvider).valueOrNull?.id;
+      if (uid == null || uid.isEmpty) {
+        throw StateError('createGroup: not authenticated');
+      }
+      await HiveService.instance.setCachedGroupsForUser(
+        uid,
+        next.map((g) => g.toJson()).toList(),
+      );
       return next;
     });
   }
@@ -58,8 +100,14 @@ class GroupsViewModel extends _$GroupsViewModel {
 
       final exists = prev.any((g) => g.id == joined.id);
       final next = exists ? prev : [joined, ...prev];
-      await HiveService.instance
-          .setCachedGroups(next.map((g) => g.toJson()).toList());
+      final uid = ref.read(authViewModelProvider).valueOrNull?.id;
+      if (uid == null || uid.isEmpty) {
+        throw StateError('joinGroup: not authenticated');
+      }
+      await HiveService.instance.setCachedGroupsForUser(
+        uid,
+        next.map((g) => g.toJson()).toList(),
+      );
       return next;
     });
     if (state is AsyncError) {
@@ -83,13 +131,23 @@ class GroupsViewModel extends _$GroupsViewModel {
       next.insert(0, group);
     }
     state = AsyncValue.data(next);
-    await HiveService.instance.setCachedGroups(next.map((g) => g.toJson()).toList());
+    final uid = ref.read(authViewModelProvider).valueOrNull?.id;
+    if (uid == null || uid.isEmpty) return;
+    await HiveService.instance.setCachedGroupsForUser(
+      uid,
+      next.map((g) => g.toJson()).toList(),
+    );
   }
 
   // Utility for debugging/corrupted cache recovery (kept internal).
   Future<void> clearCache() async {
     state = const AsyncValue.data([]);
-    await HiveService.instance.setCachedGroups(const []);
+    final uid = ref.read(authViewModelProvider).valueOrNull?.id;
+    if (uid != null && uid.isNotEmpty) {
+      await HiveService.instance.setCachedGroupsForUser(uid, const []);
+    } else {
+      await HiveService.instance.clearGroupListCache();
+    }
   }
 }
 

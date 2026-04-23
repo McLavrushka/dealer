@@ -25,6 +25,7 @@
   "transferCommentHint": "Card/phone and preferred bank (e.g. Tinkoff +7… / Sber **** 1234)",
   "currencyCodeHint": "USD / EUR / RUB",
   "saveButton": "Save",
+  "profileSavedMessage": "Profile saved",
   "logoutButton": "Logout",
   "debugClearHiveButton": "Clean all app memory",
   "clearStorageDialogTitle": "Clear local storage?",

@@ -51,7 +51,13 @@ class AuthViewModel extends _$AuthViewModel {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       );
-      final user = response.user;
+      // AuthResponse.user often omits optional profile fields; /users/me is canonical.
+      UserDto user = response.user;
+      try {
+        user = await repo.me();
+      } catch (_) {
+        // Keep embedded user if me() fails right after login (e.g. flaky network).
+      }
       if (pushMessagingEnabled) {
         unawaited(
           PushNotificationsService.instance.syncToken(
@@ -78,7 +84,12 @@ class AuthViewModel extends _$AuthViewModel {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       );
-      final user = response.user;
+      UserDto user = response.user;
+      try {
+        user = await repo.me();
+      } catch (_) {
+        // Same as [login]: prefer full profile from GET /users/me.
+      }
       if (pushMessagingEnabled) {
         unawaited(
           PushNotificationsService.instance.syncToken(
@@ -88,6 +99,17 @@ class AuthViewModel extends _$AuthViewModel {
       }
       return user;
     });
+  }
+
+  /// Refetch profile without going to [AsyncLoading] (avoids flashing the profile skeleton).
+  Future<void> reloadMeFromServerSilently() async {
+    if (HiveService.instance.accessToken == null) return;
+    try {
+      final user = await ref.read(authRepositoryProvider).me();
+      state = AsyncData(user);
+    } catch (_) {
+      // Keep current [state] on failure (offline, etc.).
+    }
   }
 
   Future<void> refreshMe() async {

@@ -140,18 +140,69 @@ class HiveService {
     return value;
   }
 
-  List<Map<String, dynamic>> get cachedGroups {
-    if (!_isInitialized) return const [];
-    final raw = _cacheBox.get(HiveKeys.cachedGroups);
-    if (raw is List) {
-      return raw.whereType<Map>().map(_deepStringKeyedMap).toList();
+  Map<String, dynamic> _cachedGroupsByUserMap() {
+    final raw = _cacheBox.get(HiveKeys.cachedGroupsByUser);
+    if (raw is Map) {
+      return raw.map(
+        (k, v) => MapEntry(k.toString(), v),
+      );
     }
-    return const [];
+    return <String, dynamic>{};
   }
 
-  Future<void> setCachedGroups(List<Map<String, dynamic>> groupsJson) async {
+  Future<void> _migrateLegacyGroupsIntoMapIfNeeded() async {
+    final hasLegacyOwner = _cacheBox.containsKey(HiveKeys.cachedGroupsOwnerId);
+    final hasLegacyList = _cacheBox.containsKey(HiveKeys.cachedGroups);
+    if (!hasLegacyOwner && !hasLegacyList) return;
+
+    final map = _cachedGroupsByUserMap();
+    final legacyOwner = _cacheBox.get(HiveKeys.cachedGroupsOwnerId) as String?;
+    final legacyList = _cacheBox.get(HiveKeys.cachedGroups);
+    if (legacyOwner != null &&
+        legacyOwner.isNotEmpty &&
+        legacyList is List &&
+        legacyList.isNotEmpty &&
+        !map.containsKey(legacyOwner)) {
+      map[legacyOwner] = legacyList.map(_deepConvertJsonValue).toList();
+    }
+    await _cacheBox.delete(HiveKeys.cachedGroupsOwnerId);
+    await _cacheBox.delete(HiveKeys.cachedGroups);
+    if (map.isNotEmpty) {
+      await _cacheBox.put(HiveKeys.cachedGroupsByUser, map);
+    }
+  }
+
+  /// Offline group list for account [userId] (separate from other users on this device).
+  Future<List<Map<String, dynamic>>> cachedGroupsForUser(String userId) async {
+    if (!_isInitialized) return const [];
+    if (userId.isEmpty) return const [];
+    await _migrateLegacyGroupsIntoMapIfNeeded();
+
+    final map = _cachedGroupsByUserMap();
+    final entry = map[userId];
+    if (entry is! List) return const [];
+    return entry.whereType<Map>().map(_deepStringKeyedMap).toList();
+  }
+
+  Future<void> setCachedGroupsForUser(
+    String userId,
+    List<Map<String, dynamic>> groupsJson,
+  ) async {
     if (!_isInitialized) await init();
-    await _cacheBox.put(HiveKeys.cachedGroups, groupsJson);
+    if (userId.isEmpty) return;
+    await _migrateLegacyGroupsIntoMapIfNeeded();
+
+    final map = _cachedGroupsByUserMap();
+    map[userId] = groupsJson;
+    await _cacheBox.put(HiveKeys.cachedGroupsByUser, map);
+  }
+
+  /// Clears all per-user group lists and legacy keys (e.g. debug / no session).
+  Future<void> clearGroupListCache() async {
+    if (!_isInitialized) await init();
+    await _cacheBox.delete(HiveKeys.cachedGroupsByUser);
+    await _cacheBox.delete(HiveKeys.cachedGroupsOwnerId);
+    await _cacheBox.delete(HiveKeys.cachedGroups);
   }
 }
 

@@ -38,7 +38,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (error != null) Snackbars.showError(context, error);
 
       final user = next.valueOrNull;
-      if (user != null) context.go(resolvePostAuthDestination());
+      if (user != null) {
+        scheduleRouterGo(context, resolvePostAuthDestination());
+      }
     });
 
     final state = ref.watch(authViewModelProvider);

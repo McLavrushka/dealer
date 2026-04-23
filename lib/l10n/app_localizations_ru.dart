@@ -85,6 +85,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saveButton => 'Сохранить';
 
   @override
+  String get profileSavedMessage => 'Профиль сохранён';
+
+  @override
   String get logoutButton => 'Выйти';
 
   @override

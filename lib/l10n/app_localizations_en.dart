@@ -85,6 +85,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveButton => 'Save';
 
   @override
+  String get profileSavedMessage => 'Profile saved';
+
+  @override
   String get logoutButton => 'Logout';
 
   @override

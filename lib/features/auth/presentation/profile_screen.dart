@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/context_l10n.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/router/post_auth_route.dart';
 import '../../../core/settings/app_settings_provider.dart';
 import '../../../core/storage/hive_service.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -28,6 +30,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _name = TextEditingController();
   final _currency = TextEditingController();
   final _transferComment = TextEditingController();
+  var _didSilentProfileRefresh = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _didSilentProfileRefresh) return;
+      _didSilentProfileRefresh = true;
+      unawaited(
+        ref.read(authViewModelProvider.notifier).reloadMeFromServerSilently(),
+      );
+    });
+  }
 
   @override
   void dispose() {
@@ -42,11 +57,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     ref.listen(authViewModelProvider, (prev, next) {
       final error = next.error;
       if (error != null) Snackbars.showError(context, error);
-
-      final user = next.valueOrNull;
-      if (user == null && !(next.isLoading)) {
-        context.go(AppRoutes.login);
-      }
+      // Logout / session end: [GoRouter.redirect] handles navigation to login via
+      // [GoRouterAuthRefresh]; avoid [context.go] here (Riverpod + redirect timing).
     });
 
     final state = ref.watch(authViewModelProvider);
@@ -268,7 +280,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     await HiveService.instance.clearAll();
     if (!mounted) return;
     Snackbars.showSuccess(context, context.l10n.localStorageClearedMessage);
-    context.go(AppRoutes.login);
+    scheduleRouterGo(context, AppRoutes.login);
   }
 
   Future<void> _save() async {
@@ -284,6 +296,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ? null
               : _transferComment.text.trim(),
         );
+    if (!mounted) return;
+    final post = ref.read(authViewModelProvider);
+    if (post.hasError) return;
+    Snackbars.showSuccess(context, context.l10n.profileSavedMessage);
   }
 }
 

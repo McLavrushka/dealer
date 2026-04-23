@@ -46,6 +46,12 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
+// Some plugins still pull the legacy `firebase-iid` artifact; it duplicates classes
+// shipped inside newer `firebase-messaging` (e.g. FirebaseInstanceIdReceiver).
+configurations.configureEach {
+    exclude(group = "com.google.firebase", module = "firebase-iid")
+}
+
 flutter {
     source = "../.."
 }

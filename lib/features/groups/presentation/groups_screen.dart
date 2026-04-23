@@ -52,27 +52,42 @@ class GroupsScreen extends ConsumerWidget {
           ),
           data: (groups) {
             if (groups.isEmpty) {
-              return EmptyState(
-                icon: Icons.group_outlined,
-                title: l10n.noGroupsTitle,
-                message: l10n.noGroupsMessage,
-                actionLabel: l10n.addGroupButton,
-                onAction: () => _openActions(context, ref),
+              return RefreshIndicator(
+                onRefresh: () =>
+                    ref.read(groupsViewModelProvider.notifier).refresh(),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  children: [
+                    EmptyState(
+                      icon: Icons.group_outlined,
+                      title: l10n.noGroupsTitle,
+                      message: l10n.noGroupsMessage,
+                      actionLabel: l10n.addGroupButton,
+                      onAction: () => _openActions(context, ref),
+                    ),
+                  ],
+                ),
               );
             }
 
-            return ListView.separated(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              itemCount: groups.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, index) {
-                final group = groups[index];
-                return GroupCard(
-                  group: group,
-                  onTap: () => context.push('/groups/${group.id}'),
-                );
-              },
+            return RefreshIndicator(
+              onRefresh: () =>
+                  ref.read(groupsViewModelProvider.notifier).refresh(),
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(AppSpacing.md),
+                itemCount: groups.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: AppSpacing.sm),
+                itemBuilder: (context, index) {
+                  final group = groups[index];
+                  return GroupCard(
+                    group: group,
+                    onTap: () => context.push('/groups/${group.id}'),
+                  );
+                },
+              ),
             );
           },
         ),

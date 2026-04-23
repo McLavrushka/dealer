@@ -18,6 +18,7 @@ import '../../bills/presentation/widgets/create_bill_sheet.dart';
 import '../data/group_providers.dart';
 import '../data/models/group_dto.dart';
 import 'group_view_model.dart';
+import 'groups_view_model.dart';
 
 class GroupScreen extends ConsumerWidget {
   const GroupScreen({super.key, required this.groupId});
@@ -27,8 +28,13 @@ class GroupScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(groupViewModelProvider(groupId), (prev, next) {
-      final error = next.error;
-      if (error != null) Snackbars.showError(context, error);
+      if (next.hasError && next.error != null) {
+        Snackbars.showError(context, next.error!);
+      }
+      final data = next.valueOrNull;
+      if (data != null) {
+        ref.read(groupsViewModelProvider.notifier).upsertCached(data.group);
+      }
     });
 
     final state = ref.watch(groupViewModelProvider(groupId));

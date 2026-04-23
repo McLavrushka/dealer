@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserDto {
 
- String get id; String get name; String get email; String? get avatarUrl; String? get currencyDefault; String? get transferComment;
+ String get id; String get name; String get email;@JsonKey(readValue: _readAvatarUrl) String? get avatarUrl;@JsonKey(readValue: _readCurrencyDefault) String? get currencyDefault;@JsonKey(readValue: _readTransferComment) String? get transferComment;
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UserDtoCopyWith<$Res>  {
   factory $UserDtoCopyWith(UserDto value, $Res Function(UserDto) _then) = _$UserDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String email, String? avatarUrl, String? currencyDefault, String? transferComment
+ String id, String name, String email,@JsonKey(readValue: _readAvatarUrl) String? avatarUrl,@JsonKey(readValue: _readCurrencyDefault) String? currencyDefault,@JsonKey(readValue: _readTransferComment) String? transferComment
 });
 
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String email,  String? avatarUrl,  String? currencyDefault,  String? transferComment)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String email, @JsonKey(readValue: _readAvatarUrl)  String? avatarUrl, @JsonKey(readValue: _readCurrencyDefault)  String? currencyDefault, @JsonKey(readValue: _readTransferComment)  String? transferComment)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserDto() when $default != null:
 return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.currencyDefault,_that.transferComment);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.currencyDe
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String email,  String? avatarUrl,  String? currencyDefault,  String? transferComment)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String email, @JsonKey(readValue: _readAvatarUrl)  String? avatarUrl, @JsonKey(readValue: _readCurrencyDefault)  String? currencyDefault, @JsonKey(readValue: _readTransferComment)  String? transferComment)  $default,) {final _that = this;
 switch (_that) {
 case _UserDto():
 return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.currencyDefault,_that.transferComment);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.currencyDe
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String email,  String? avatarUrl,  String? currencyDefault,  String? transferComment)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String email, @JsonKey(readValue: _readAvatarUrl)  String? avatarUrl, @JsonKey(readValue: _readCurrencyDefault)  String? currencyDefault, @JsonKey(readValue: _readTransferComment)  String? transferComment)?  $default,) {final _that = this;
 switch (_that) {
 case _UserDto() when $default != null:
 return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.currencyDefault,_that.transferComment);case _:
@@ -214,15 +214,15 @@ return $default(_that.id,_that.name,_that.email,_that.avatarUrl,_that.currencyDe
 @JsonSerializable()
 
 class _UserDto implements UserDto {
-  const _UserDto({required this.id, required this.name, required this.email, this.avatarUrl, this.currencyDefault, this.transferComment});
+  const _UserDto({required this.id, required this.name, required this.email, @JsonKey(readValue: _readAvatarUrl) this.avatarUrl, @JsonKey(readValue: _readCurrencyDefault) this.currencyDefault, @JsonKey(readValue: _readTransferComment) this.transferComment});
   factory _UserDto.fromJson(Map<String, dynamic> json) => _$UserDtoFromJson(json);
 
 @override final  String id;
 @override final  String name;
 @override final  String email;
-@override final  String? avatarUrl;
-@override final  String? currencyDefault;
-@override final  String? transferComment;
+@override@JsonKey(readValue: _readAvatarUrl) final  String? avatarUrl;
+@override@JsonKey(readValue: _readCurrencyDefault) final  String? currencyDefault;
+@override@JsonKey(readValue: _readTransferComment) final  String? transferComment;
 
 /// Create a copy of UserDto
 /// with the given fields replaced by the non-null parameter values.
@@ -257,7 +257,7 @@ abstract mixin class _$UserDtoCopyWith<$Res> implements $UserDtoCopyWith<$Res> {
   factory _$UserDtoCopyWith(_UserDto value, $Res Function(_UserDto) _then) = __$UserDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String email, String? avatarUrl, String? currencyDefault, String? transferComment
+ String id, String name, String email,@JsonKey(readValue: _readAvatarUrl) String? avatarUrl,@JsonKey(readValue: _readCurrencyDefault) String? currencyDefault,@JsonKey(readValue: _readTransferComment) String? transferComment
 });
 
 

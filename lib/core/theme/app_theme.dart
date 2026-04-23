@@ -102,10 +102,20 @@ abstract final class AppTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: scheme.brightness == Brightness.dark ? AppColors.card2 : null,
-        contentTextStyle: base.textTheme.bodyMedium?.copyWith(
-          color: scheme.brightness == Brightness.dark ? AppColors.textPrimary : null,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
         ),
+        // M3 default for light uses inverse (dark) snackbars; set explicit surfaces.
+        backgroundColor: scheme.brightness == Brightness.dark
+            ? AppColors.card2
+            : scheme.surfaceContainerHighest,
+        contentTextStyle: base.textTheme.bodyMedium?.copyWith(
+          color: scheme.brightness == Brightness.dark
+              ? AppColors.textPrimary
+              : scheme.onSurface,
+        ),
+        actionTextColor: scheme.primary,
       ),
     );
   }

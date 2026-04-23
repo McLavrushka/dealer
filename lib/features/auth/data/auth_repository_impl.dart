@@ -48,9 +48,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserDto> updateMe(UpdateProfileRequest request) async {
+    final data = <String, dynamic>{
+      if (request.name != null) 'name': request.name,
+      if (request.currencyDefault != null) 'currencyDefault': request.currencyDefault,
+      // Always send so the backend can clear the field when the user clears the box.
+      'transferComment': request.transferComment,
+    };
     final response = await _dio.patch<Map<String, dynamic>>(
       ApiConfig.usersMe,
-      data: request.toJson(),
+      data: data,
     );
     return UserDto.fromJson(response.data!);
   }

@@ -38,6 +38,9 @@ abstract final class ApiConfig {
   static const usersMe = '$apiV1/users/me';
   static const usersMeFcmToken = '$apiV1/users/me/fcm-token';
 
+  /// `POST /api/v1/groups` — create group ([GroupDto] in response).
+  static const groups = '$apiV1/groups';
+
   static const notifications = '$apiV1/notifications';
 
   /// Base URL for invite deep links (must match Android intent host / iOS universal links).

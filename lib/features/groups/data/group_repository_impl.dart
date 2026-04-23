@@ -17,7 +17,7 @@ class GroupRepositoryImpl implements GroupRepository {
   @override
   Future<GroupDto> create(CreateGroupRequest request) async {
     final response = await _dio.post<Map<String, dynamic>>(
-      '${ApiConfig.apiV1}/groups',
+      ApiConfig.groups,
       data: request.toJson(),
     );
     return GroupDto.fromJson(response.data!);

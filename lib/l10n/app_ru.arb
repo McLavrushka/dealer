@@ -25,6 +25,7 @@
   "transferCommentHint": "Карта/телефон и банк (например: Тинькофф +7… / Сбер **** 1234)",
   "currencyCodeHint": "USD / EUR / RUB",
   "saveButton": "Сохранить",
+  "profileSavedMessage": "Профиль сохранён",
   "logoutButton": "Выйти",
   "debugClearHiveButton": "Удалить сохраненные на устройстве данные",
   "clearStorageDialogTitle": "Очистить локальные данные?",

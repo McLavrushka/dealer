@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/auth/data/models/user_dto.dart';
 import '../../features/auth/presentation/auth_view_model.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/profile_screen.dart';
@@ -77,15 +79,41 @@ abstract final class BillScanExtra {
   static const openOcrTab = 'billScanOpenOcrTab';
 }
 
+/// Notifies [GoRouter] when auth changes **without** recreating [GoRouter].
+/// Recreating the router on every [authViewModelProvider] emission used to
+/// combine badly with [redirect]'s [ref.read] → `!_didChangeDependency` crashes
+/// (e.g. opening profile after [reloadMeFromServerSilently]).
+final class GoRouterAuthRefresh extends ChangeNotifier {
+  GoRouterAuthRefresh(Ref ref) {
+    _sub = ref.listen<AsyncValue<UserDto?>>(
+      authViewModelProvider,
+      (prev, next) {
+        Future.microtask(() {
+          if (!_disposed) notifyListeners();
+        });
+      },
+    );
+  }
+
+  late final ProviderSubscription<AsyncValue<UserDto?>> _sub;
+  var _disposed = false;
+
+  @override
+  void dispose() {
+    if (_disposed) return;
+    _disposed = true;
+    _sub.close();
+    super.dispose();
+  }
+}
+
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
-  // Subscribe here so [GoRouter] is recreated when auth changes. The [redirect]
-  // callback must use [ref.read], not [ref.watch]: otherwise a synchronous
-  // [context.go] from e.g. [ref.listen] on [authViewModelProvider] runs
-  // redirect while auth is mid-notify → Riverpod asserts !_didChangeDependency.
-  ref.watch(authViewModelProvider);
+  final refresh = GoRouterAuthRefresh(ref);
+  ref.onDispose(refresh.dispose);
 
   return GoRouter(
+    refreshListenable: refresh,
     initialLocation: _resolveInitialLocation(),
     routes: [
       GoRoute(
